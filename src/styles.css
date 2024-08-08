@@ -131,6 +131,7 @@ body {
     padding: 20px;
     box-sizing: border-box;
     overflow-y: auto;
+    flex-grow: 1; /* Allow the chat container to grow and fill available space */
 }
 
 .chat-box {
@@ -157,6 +158,15 @@ body {
 
 .chat-box .messages div:nth-child(even) {
     background-color: #f9f9f9; /* Default background for even comments */
+}
+
+#bottom-bar {
+    background-color: #6441a5;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Add these styles to your CSS file */
