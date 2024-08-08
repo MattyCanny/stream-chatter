@@ -46,6 +46,7 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
         chatBox = document.createElement('div');
         chatBox.id = username;
         chatBox.className = 'chat-box';
+        chatBox.style.height = `${currentBoxSize}px`; // Set the height to the current box size
         chatBox.innerHTML = `
             <div class="username">
                 <img src="${profileImageUrl}" class="profile-image" alt="${username}">
