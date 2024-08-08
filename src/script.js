@@ -48,7 +48,7 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
         chatBox.className = 'chat-box';
         chatBox.style.height = `${currentBoxSize}px`; // Set the height to the current box size
         chatBox.innerHTML = `
-            <div class="username">
+            <div class="username" data-username="${username}" data-display-name="${username}">
                 <img src="${profileImageUrl}" class="profile-image" alt="${username}">
                 ${getBadgesHTML(badges)}
                 <span class="username-text" style="color: ${profileColor};">${username}</span>
@@ -278,5 +278,18 @@ toggleTimestampsCheckbox.addEventListener('change', (event) => {
         chatContainer.classList.add('show-timestamps');
     } else {
         chatContainer.classList.remove('show-timestamps');
+    }
+});
+
+// Add display name beside username if different
+document.querySelectorAll('.chat-box .username').forEach(usernameElement => {
+    const username = usernameElement.getAttribute('data-username');
+    const displayName = usernameElement.getAttribute('data-display-name');
+
+    if (displayName && displayName !== username) {
+        const displayNameElement = document.createElement('span');
+        displayNameElement.className = 'display-name';
+        displayNameElement.textContent = `(${displayName})`;
+        usernameElement.appendChild(displayNameElement);
     }
 });

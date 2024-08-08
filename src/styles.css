@@ -177,6 +177,12 @@ body {
     z-index: 1;
 }
 
+.chat-box .display-name {
+    font-weight: normal;
+    color: #888; /* Different color for the display name */
+    margin-left: 5px; /* Space between username and display name */
+}
+
 .chat-box .messages {
     margin-top: 5px;
     overflow-y: auto; /* Make the messages area scrollable */
@@ -184,7 +190,7 @@ body {
 }
 
 .chat-box .messages div:nth-child(odd) {
-    background-color: #e0e0e0; /* Light grey background for odd comments */
+    background-color: #c8e5ff; /* Light grey background for odd comments */
 }
 
 .chat-box .messages div:nth-child(even) {
