@@ -40,8 +40,13 @@ function authenticate() {
         const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scopes}`;
         window.location = authUrl;
     } else {
+        // Prompt for the channel name after authentication
         const channelName = prompt("Enter the Twitch channel name:");
-        connectToTwitchChat(token, channelName);
+        if (channelName) {
+            connectToTwitchChat(token, channelName);
+        } else {
+            alert("Channel name is required to connect to Twitch chat.");
+        }
     }
 }
 
