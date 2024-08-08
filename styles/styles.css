@@ -1,0 +1,21 @@
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.chat-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px 0;
+    width: 300px;
+    background-color: #f9f9f9;
+}
+
+.chat-box .username {
+    font-weight: bold;
+}
+
+.chat-box .messages {
+    margin-top: 5px;
+}
