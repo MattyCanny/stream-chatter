@@ -4,15 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Twitch Chat Display</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="login-container">
-        <form id="login-form">
-            <label for="username">Twitch Username:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="channel">Channel Name:</label>
-            <input type="text" id="channel" name="channel" required>
-            <button type="submit">Login</button>
+    <div id="login-container" class="centered-container">
+        <form id="login-form" class="login-form">
+            <h2>Login to Twitch Chat</h2>
+            <div class="form-group">
+                <label for="username">Twitch Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="channel">Channel Name:</label>
+                <input type="text" id="channel" name="channel" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
         </form>
     </div>
     <div id="chat-container" style="display:none;"></div>
