@@ -5,11 +5,11 @@ const chatContainer = document.getElementById('chat-container');
 const loginContainer = document.getElementById('login-container');
 const loginForm = document.getElementById('login-form');
 
-let lastMessage = ''; // Variable to store the last message received
+const lastMessages = {}; // Object to store the last message received for each user
 
 function addChatMessage(username, message) {
-    // Check if the new message is the same as the last message received
-    if (message === lastMessage) {
+    // Check if the new message is the same as the last message received from the same user
+    if (lastMessages[username] === message) {
         console.log('Duplicate message detected, skipping:', message);
         return; // Skip adding the message
     }
@@ -31,8 +31,8 @@ function addChatMessage(username, message) {
     messageElement.textContent = message;
     messagesDiv.appendChild(messageElement);
 
-    // Update the last message received
-    lastMessage = message;
+    // Update the last message received for the user
+    lastMessages[username] = message;
 }
 
 // OAuth and tmi.js setup
