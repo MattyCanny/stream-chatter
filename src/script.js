@@ -113,9 +113,11 @@ function getOAuthToken() {
     const urlParams = new URLSearchParams(window.location.hash.substring(1));
     const token = urlParams.get('access_token');
     
-    // Remove the access token from the URL
+    // Remove the access token from the URL and add the channel name
     if (token) {
-        history.replaceState(null, null, ' ');
+        const channelName = localStorage.getItem('channelName');
+        const newUrl = channelName ? `/${channelName}` : '/';
+        history.replaceState(null, null, newUrl);
     }
     
     return token;
