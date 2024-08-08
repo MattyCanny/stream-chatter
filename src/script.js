@@ -8,6 +8,7 @@ const channelNameElement = document.getElementById('channel-name');
 const channelLogoElement = document.getElementById('channel-logo');
 const increaseFontButton = document.getElementById('increase-font');
 const decreaseFontButton = document.getElementById('decrease-font');
+const loadingOverlay = document.getElementById('loading-overlay');
 
 let currentFontSize = 16; // Default font size
 let client; // Declare client variable outside the function
@@ -135,6 +136,8 @@ window.addEventListener('load', () => {
             connectToTwitchChat(token, username, channelName);
         }
     }
+    // Hide the loading overlay once the page is fully loaded
+    loadingOverlay.style.display = 'none';
 });
 
 loginForm.addEventListener('submit', function(event) {
