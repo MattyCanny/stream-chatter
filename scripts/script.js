@@ -1,3 +1,8 @@
+// Load environment variables from .env file
+if (typeof process !== 'undefined') {
+    require('dotenv').config();
+}
+
 const chatContainer = document.getElementById('chat-container');
 
 function addChatMessage(username, message) {
@@ -20,8 +25,8 @@ function addChatMessage(username, message) {
 }
 
 // OAuth and tmi.js setup
-const clientId = 'your_client_id';
-const redirectUri = 'https://twitch-chatter.vercel.app'; // Ensure this matches exactly
+const clientId = process.env.CLIENT_ID || 'your_client_id';
+const redirectUri = process.env.REDIRECT_URI || 'https://twitch-chatter.vercel.app'; // Ensure this matches exactly
 const scopes = 'chat:read chat:edit';
 
 function getOAuthToken() {
