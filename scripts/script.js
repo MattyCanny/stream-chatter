@@ -19,7 +19,48 @@ function addChatMessage(username, message) {
     messagesDiv.appendChild(messageElement);
 }
 
-// Example usage:
-addChatMessage('user1', 'Hello, world!');
-addChatMessage('user2', 'Hi there!');
-addChatMessage('user1', 'How are you?');
+// OAuth and tmi.js setup
+const clientId = 'your_client_id';
+const redirectUri = 'https://twitch-chatter.vercel.app'; // Ensure this matches exactly
+const scopes = 'chat:read chat:edit';
+
+function getOAuthToken() {
+    const urlParams = new URLSearchParams(window.location.hash.substring(1));
+    return urlParams.get('access_token');
+}
+
+function authenticate() {
+    const token = getOAuthToken();
+    if (!token) {
+        const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scopes}`;
+        window.location = authUrl;
+    } else {
+        connectToTwitchChat(token);
+    }
+}
+
+function connectToTwitchChat(token) {
+    const client = new tmi.Client({
+        options: { debug: true },
+        connection: {
+            reconnect: true,
+            secure: true
+        },
+        identity: {
+            username: 'your_twitch_username',
+            password: `oauth:${token}`
+        },
+        channels: [ 'channel_name' ]
+    });
+
+    client.connect();
+
+    client.on('message', (channel, tags, message, self) => {
+        if(self) return; // Ignore messages from the bot itself
+
+        const username = tags['display-name'] || tags['username'];
+        addChatMessage(username, message);
+    });
+}
+
+authenticate();
