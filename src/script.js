@@ -11,6 +11,7 @@ const decreaseFontButton = document.getElementById('decrease-font');
 
 let currentFontSize = 16; // Default font size
 let client; // Declare client variable outside the function
+let isListenerAttached = false; // Flag to track event listener attachment
 
 function addChatMessage(username, message) {
     let chatBox = document.getElementById(username);
@@ -73,12 +74,15 @@ function connectToTwitchChat(token, username, channelName) {
     client.connect();
 
     // Ensure the event listener is attached only once
-    client.on('message', (channel, tags, message, self) => {
-        if(self) return; // Ignore messages from the bot itself
+    if (!isListenerAttached) {
+        client.on('message', (channel, tags, message, self) => {
+            if(self) return; // Ignore messages from the bot itself
 
-        const displayName = tags['display-name'] || tags['username'];
-        addChatMessage(displayName, message);
-    });
+            const displayName = tags['display-name'] || tags['username'];
+            addChatMessage(displayName, message);
+        });
+        isListenerAttached = true; // Set the flag to true after attaching the listener
+    }
 
     // Fetch and display channel information
     fetch(`https://api.twitch.tv/helix/users?login=${channelName}`, {
