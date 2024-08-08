@@ -83,9 +83,10 @@ function getBadgesHTML(badges) {
 }
 
 function fetchProfileImageUrl(username, callback) {
+    const token = getOAuthToken(); // Ensure the token is fetched correctly
     fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
-            'Authorization': `Bearer ${getOAuthToken()}`,
+            'Authorization': `Bearer ${token}`,
             'Client-ID': clientId
         }
     })
@@ -95,6 +96,7 @@ function fetchProfileImageUrl(username, callback) {
             const profileImageUrl = data.data[0].profile_image_url;
             callback(profileImageUrl);
         } else {
+            console.error('No data found for user:', username);
             callback(null);
         }
     })
@@ -105,8 +107,8 @@ function fetchProfileImageUrl(username, callback) {
 }
 
 // OAuth and tmi.js setup
-const clientId = process.env.CLIENT_ID;
-const redirectUri = process.env.REDIRECT_URI;
+const clientId = process.env.CLIENT_ID; // Ensure this is correctly set
+const redirectUri = process.env.REDIRECT_URI; // Ensure this is correctly set
 const scopes = 'chat:read chat:edit';
 
 function getOAuthToken() {
@@ -168,7 +170,11 @@ function connectToTwitchChat(token, username, channelName) {
             console.log(`Message received from ${displayName}: ${message}`);
 
             fetchProfileImageUrl(displayName, (profileImageUrl) => {
-                addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
+                if (profileImageUrl) {
+                    addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
+                } else {
+                    console.error('Profile image URL is null for user:', displayName);
+                }
             });
         });
         isListenerAttached = true; // Set the flag to true after attaching the listener
