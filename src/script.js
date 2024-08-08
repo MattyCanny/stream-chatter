@@ -171,6 +171,7 @@ function connectToTwitchChat(token, username, channelName) {
             const channelInfo = data.data[0];
             channelNameElement.textContent = channelInfo.display_name;
             channelLogoElement.src = channelInfo.profile_image_url;
+            localStorage.setItem('channelLogoUrl', channelInfo.profile_image_url); // Store the channel logo URL
         }
     })
     .catch(error => {
@@ -181,20 +182,28 @@ function connectToTwitchChat(token, username, channelName) {
 // Check for access token on page load
 window.addEventListener('load', () => {
     const token = getOAuthToken();
+    const channelIcon = document.getElementById('channel-logo');
+    const channelNameElement = document.getElementById('channel-name');
     if (token) {
         const username = localStorage.getItem('username');
         const channelName = localStorage.getItem('channelName');
+        const channelLogoUrl = localStorage.getItem('channelLogoUrl'); // Assuming you store the channel logo URL
         if (username && channelName) {
             loginContainer.style.display = 'none';
             chatContainer.style.display = 'block';
             connectToTwitchChat(token, username, channelName);
+            // Set the channel logo source and show the channel icon
+            channelIcon.src = channelLogoUrl;
+            channelIcon.classList.remove('hidden');
+            channelNameElement.textContent = channelName;
         }
     }
     // Hide the loading overlay once the page is fully loaded
     loadingOverlay.style.display = 'none';
 
-    // Hide the chat container initially
+    // Hide the chat container and channel icon initially
     chatContainer.classList.add('hidden');
+    channelIcon.classList.add('hidden');
 });
 
 loginForm.addEventListener('submit', function(event) {
