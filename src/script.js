@@ -5,7 +5,15 @@ const chatContainer = document.getElementById('chat-container');
 const loginContainer = document.getElementById('login-container');
 const loginForm = document.getElementById('login-form');
 
+let lastMessage = ''; // Variable to store the last message received
+
 function addChatMessage(username, message) {
+    // Check if the new message is the same as the last message received
+    if (message === lastMessage) {
+        console.log('Duplicate message detected, skipping:', message);
+        return; // Skip adding the message
+    }
+
     let chatBox = document.getElementById(username);
 
     if (!chatBox) {
@@ -22,6 +30,9 @@ function addChatMessage(username, message) {
     const messageElement = document.createElement('div');
     messageElement.textContent = message;
     messagesDiv.appendChild(messageElement);
+
+    // Update the last message received
+    lastMessage = message;
 }
 
 // OAuth and tmi.js setup
@@ -71,16 +82,6 @@ function connectToTwitchChat(token, username, channelName) {
 
         const displayName = tags['display-name'] || tags['username'];
         addChatMessage(displayName, message);
-    });
-
-    // Use the server-side proxy for API requests
-    fetch(`/proxy?url=${encodeURIComponent('https://api.twitch.tv/kraken/chat/emoticon_images?emotesets=0,793,19194,213,304,457,793,19194,213,304,457')}`)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
     });
 }
 
