@@ -21,6 +21,8 @@ const recentMessages = new Map(); // Map to store recent messages with timestamp
 const messageTimeout = 5000; // Time window in milliseconds to consider messages as duplicates
 
 function addChatMessage(username, message, badges, profileImageUrl, profileColor) {
+    if (!message) return; // Ensure message is not empty
+
     const now = Date.now();
 
     // Check if a similar message has been received from the same user within the time window
