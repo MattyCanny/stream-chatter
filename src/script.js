@@ -20,7 +20,7 @@ let isListenerAttached = false; // Flag to track event listener attachment
 const recentMessages = new Map(); // Map to store recent messages with timestamps
 const messageTimeout = 5000; // Time window in milliseconds to consider messages as duplicates
 
-function addChatMessage(username, message, badges) {
+function addChatMessage(username, message, badges, profileImageUrl) {
     const now = Date.now();
 
     // Check if a similar message has been received from the same user within the time window
@@ -41,7 +41,7 @@ function addChatMessage(username, message, badges) {
         chatBox = document.createElement('div');
         chatBox.id = username;
         chatBox.className = 'chat-box';
-        chatBox.innerHTML = `<div class="username">${getBadgesHTML(badges)}${username}</div><div class="messages"></div>`;
+        chatBox.innerHTML = `<div class="username"><img src="${profileImageUrl}" class="profile-image" alt="${username}">${getBadgesHTML(badges)}${username}</div><div class="messages"></div>`;
         chatContainer.appendChild(chatBox); // Append to the end to maintain order
     } else {
         // Move the chat box to the top
@@ -60,9 +60,32 @@ function addChatMessage(username, message, badges) {
 function getBadgesHTML(badges) {
     if (!badges) return '';
     return Object.keys(badges).map(badge => {
-        const badgeUrl = `https://static-cdn.jtvnw.net/badges/v1/${badges[badge]}/1`;
+        const badgeVersion = badges[badge];
+        const badgeUrl = `https://static-cdn.jtvnw.net/badges/v1/${badge}/${badgeVersion}/1`;
         return `<img src="${badgeUrl}" class="badge" alt="${badge}">`;
     }).join('');
+}
+
+function fetchProfileImageUrl(username, callback) {
+    fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
+        headers: {
+            'Authorization': `Bearer ${getOAuthToken()}`,
+            'Client-ID': clientId
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.data && data.data.length > 0) {
+            const profileImageUrl = data.data[0].profile_image_url;
+            callback(profileImageUrl);
+        } else {
+            callback(null);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching profile image URL:', error);
+        callback(null);
+    });
 }
 
 // OAuth and tmi.js setup
@@ -117,7 +140,10 @@ function connectToTwitchChat(token, username, channelName) {
             const displayName = tags['display-name'] || tags['username'];
             const badges = tags['badges']; // Get badges from tags
             console.log(`Message received from ${displayName}: ${message}`);
-            addChatMessage(displayName, message, badges);
+
+            fetchProfileImageUrl(displayName, (profileImageUrl) => {
+                addChatMessage(displayName, message, badges, profileImageUrl);
+            });
         });
         isListenerAttached = true; // Set the flag to true after attaching the listener
     }
