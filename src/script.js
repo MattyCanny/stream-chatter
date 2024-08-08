@@ -280,3 +280,4 @@ toggleTimestampsCheckbox.addEventListener('change', (event) => {
         chatContainer.classList.remove('show-timestamps');
     }
 });
+
