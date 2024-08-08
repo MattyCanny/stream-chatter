@@ -158,3 +158,15 @@ body {
 .chat-box .messages div:nth-child(even) {
     background-color: #f9f9f9; /* Default background for even comments */
 }
+
+/* Add these styles to your CSS file */
+.timestamp {
+    font-size: 12px;
+    color: #888;
+    margin-left: 10px;
+    display: none; /* Initially hidden */
+}
+
+.show-timestamps .timestamp {
+    display: inline; /* Show timestamps when the class is added */
+}

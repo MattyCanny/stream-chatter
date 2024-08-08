@@ -11,6 +11,7 @@ const decreaseFontButton = document.getElementById('decrease-font');
 const increaseBoxSizeButton = document.getElementById('increase-box-size');
 const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
 const loadingOverlay = document.getElementById('loading-overlay');
+const toggleTimestampsCheckbox = document.getElementById('toggle-timestamps');
 
 let currentFontSize = 16; // Default font size
 let currentBoxSize = 200; // Default box size
@@ -50,7 +51,8 @@ function addChatMessage(username, message) {
 
     const messagesDiv = chatBox.querySelector('.messages');
     const messageElement = document.createElement('div');
-    messageElement.textContent = message;
+    const timestamp = new Date().toLocaleTimeString(); // Get the current time as a string
+    messageElement.innerHTML = `${message} <span class="timestamp">${timestamp}</span>`;
     messageElement.style.fontSize = `${currentFontSize}px`; // Set the font size
     messagesDiv.appendChild(messageElement);
 }
@@ -190,3 +192,12 @@ decreaseBoxSizeButton.addEventListener('click', () => {
 function updateBoxSize() {
     chatContainer.style.gridTemplateColumns = `repeat(auto-fill, minmax(${currentBoxSize}px, 1fr))`;
 }
+
+// Event listener for the toggle timestamps checkbox
+toggleTimestampsCheckbox.addEventListener('change', (event) => {
+    if (event.target.checked) {
+        chatContainer.classList.add('show-timestamps');
+    } else {
+        chatContainer.classList.remove('show-timestamps');
+    }
+});
