@@ -252,18 +252,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
 
     increaseBoxSizeButton.addEventListener('click', () => {
+        currentBoxSize += 20; // Increase the current box size
         const chatBoxes = document.querySelectorAll('.chat-box');
         chatBoxes.forEach(chatBox => {
-            const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
-            chatBox.style.height = `${currentHeight + 20}px`; // Increase height by 20px
+            chatBox.style.height = `${currentBoxSize}px`; // Set the height to the updated box size
         });
     });
 
     decreaseBoxSizeButton.addEventListener('click', () => {
+        currentBoxSize -= 20; // Decrease the current box size
         const chatBoxes = document.querySelectorAll('.chat-box');
         chatBoxes.forEach(chatBox => {
-            const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
-            chatBox.style.height = `${currentHeight - 20}px`; // Decrease height by 20px
+            chatBox.style.height = `${currentBoxSize}px`; // Set the height to the updated box size
         });
     });
 });
@@ -280,4 +280,3 @@ toggleTimestampsCheckbox.addEventListener('change', (event) => {
         chatContainer.classList.remove('show-timestamps');
     }
 });
-
