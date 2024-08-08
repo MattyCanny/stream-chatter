@@ -8,6 +8,13 @@ body {
     height: 100vh;
 }
 
+#main-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100vh;
+}
+
 .loading-overlay {
     position: fixed;
     top: 0;
