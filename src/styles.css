@@ -140,6 +140,7 @@ body {
     border-radius: 4px;
     height: 200px; /* Fixed height */
     overflow-y: auto; /* Make the chat box scrollable */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
 .chat-box .username {
