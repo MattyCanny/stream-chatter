@@ -15,6 +15,7 @@ body {
     flex-grow: 1;
     height: 100vh;
     overflow: hidden; /* Ensure no overflow */
+    position: relative; /* Ensure the main container is the reference point */
 }
 
 .loading-overlay {
@@ -92,6 +93,11 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
+    position: absolute; /* Position the form container absolutely */
+    top: 50%; /* Center it vertically */
+    left: 50%; /* Center it horizontally */
+    transform: translate(-50%, -50%); /* Adjust the centering */
+    z-index: 1001; /* Ensure it sits above other elements */
 }
 
 .login-form h2 {
