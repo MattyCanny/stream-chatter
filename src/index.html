@@ -33,15 +33,28 @@
             <button type="submit" class="btn">Login</button>
         </form>
     </div>
-    <div id="chat-container" style="display:none;"></div>
+    <div id="chat-container">
+        <!-- Ensure your chat box structure is like this -->
+        <div id="username1" class="chat-box">
+            <div class="username">
+                <img src="profile_image_url" class="profile-image" alt="username">
+                <img src="badge_url" class="badge" alt="badge">
+                <span class="username-text" style="color: profile_color;">username</span>
+            </div>
+            <div class="messages">
+                <!-- Messages will be appended here -->
+            </div>
+        </div>
+        <!-- More chat boxes -->
+    </div>
     <div id="bottom-bar">
         <div id="left-controls">
             <button id="increase-font">A+</button>
             <button id="decrease-font">A-</button>
         </div>
         <div id="center-controls">
-            <button id="increase-box-size">▢+</button>
-            <button id="decrease-box-size">▢-</button>
+            <button id="increase-box-size">Increase Box Size</button>
+            <button id="decrease-box-size">Decrease Box Size</button>
         </div>
         <div id="right-controls">
             <label>

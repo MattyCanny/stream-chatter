@@ -20,7 +20,7 @@ let isListenerAttached = false; // Flag to track event listener attachment
 const recentMessages = new Map(); // Map to store recent messages with timestamps
 const messageTimeout = 5000; // Time window in milliseconds to consider messages as duplicates
 
-function addChatMessage(username, message, badges, profileImageUrl) {
+function addChatMessage(username, message, badges, profileImageUrl, profileColor) {
     const now = Date.now();
 
     // Check if a similar message has been received from the same user within the time window
@@ -41,7 +41,13 @@ function addChatMessage(username, message, badges, profileImageUrl) {
         chatBox = document.createElement('div');
         chatBox.id = username;
         chatBox.className = 'chat-box';
-        chatBox.innerHTML = `<div class="username"><img src="${profileImageUrl}" class="profile-image" alt="${username}">${getBadgesHTML(badges)}${username}</div><div class="messages"></div>`;
+        chatBox.innerHTML = `
+            <div class="username">
+                <img src="${profileImageUrl}" class="profile-image" alt="${username}">
+                ${getBadgesHTML(badges)}
+                <span class="username-text" style="color: ${profileColor};">${username}</span>
+            </div>
+            <div class="messages"></div>`;
         chatContainer.appendChild(chatBox); // Append to the end to maintain order
     } else {
         // Move the chat box to the top
@@ -61,7 +67,7 @@ function getBadgesHTML(badges) {
     if (!badges) return '';
     return Object.keys(badges).map(badge => {
         const badgeVersion = badges[badge];
-        const badgeUrl = `https://static-cdn.jtvnw.net/badges/v1/${badge}/default/${badgeVersion}/1`;
+        const badgeUrl = `https://static-cdn.jtvnw.net/badges/v1/${badge}/${badgeVersion}/1`;
         return `<img src="${badgeUrl}" class="badge" alt="${badge}">`;
     }).join('');
 }
@@ -139,10 +145,11 @@ function connectToTwitchChat(token, username, channelName) {
 
             const displayName = tags['display-name'] || tags['username'];
             const badges = tags['badges']; // Get badges from tags
+            const profileColor = tags['color']; // Get profile color from tags
             console.log(`Message received from ${displayName}: ${message}`);
 
             fetchProfileImageUrl(displayName, (profileImageUrl) => {
-                addChatMessage(displayName, message, badges, profileImageUrl);
+                addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
             });
         });
         isListenerAttached = true; // Set the flag to true after attaching the listener

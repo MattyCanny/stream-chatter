@@ -140,16 +140,26 @@ body {
     background-color: #f9f9f9;
     border-radius: 4px;
     height: 200px; /* Fixed height */
-    overflow-y: auto; /* Make the chat box scrollable */
+    overflow: hidden; /* Hide overflow to make only messages scrollable */
     box-sizing: border-box; /* Ensure padding and border are included in the width */
+    display: flex;
+    flex-direction: column;
 }
 
 .chat-box .username {
     font-weight: bold;
+    background-color: #e0e0e0; /* Background color for the username bar */
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .chat-box .messages {
     margin-top: 5px;
+    overflow-y: auto; /* Make the messages area scrollable */
+    flex-grow: 1;
 }
 
 .chat-box .messages div:nth-child(odd) {
