@@ -12,8 +12,24 @@ const decreaseFontButton = document.getElementById('decrease-font');
 let currentFontSize = 16; // Default font size
 let client; // Declare client variable outside the function
 let isListenerAttached = false; // Flag to track event listener attachment
+const recentMessages = new Map(); // Map to store recent messages with timestamps
+const messageTimeout = 5000; // Time window in milliseconds to consider messages as duplicates
 
 function addChatMessage(username, message) {
+    const now = Date.now();
+
+    // Check if a similar message has been received from the same user within the time window
+    if (recentMessages.has(username)) {
+        const { lastMessage, timestamp } = recentMessages.get(username);
+        if (lastMessage === message && (now - timestamp) < messageTimeout) {
+            console.log('Duplicate message detected, skipping:', message);
+            return; // Skip adding the message
+        }
+    }
+
+    // Update the recent messages map
+    recentMessages.set(username, { lastMessage: message, timestamp: now });
+
     let chatBox = document.getElementById(username);
 
     if (!chatBox) {
@@ -58,6 +74,7 @@ function connectToTwitchChat(token, username, channelName) {
     if (client) {
         console.log('Disconnecting existing client...');
         client.disconnect(); // Disconnect existing client if any
+        isListenerAttached = false; // Reset the flag when disconnecting
     }
 
     client = new tmi.Client({
