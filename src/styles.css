@@ -213,3 +213,22 @@ body {
 .show-timestamps .timestamp {
     display: inline; /* Show timestamps when the class is added */
 }
+
+.font-size-button, .box-size-button {
+    padding: 10px;
+    background-color: #6441a5; /* Twitch color */
+    color: #fff;
+    border: none;
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px; /* Add some margin between buttons */
+}
+
+.font-size-button:hover, .box-size-button:hover {
+    background-color: #503a85; /* Darker Twitch color on hover */
+}
+
+.font-size-button:active, .box-size-button:active {
+    background-color: #3e2d6b; /* Even darker Twitch color on active */
+}
