@@ -61,6 +61,9 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
     messageElement.innerHTML = `<span class="timestamp">${timestamp}</span> ${message}`;
     messageElement.style.fontSize = `${currentFontSize}px`; // Set the font size
     messagesDiv.appendChild(messageElement);
+
+    // Show the chat container if it's hidden
+    chatContainer.classList.remove('hidden');
 }
 
 function getBadgesHTML(badges) {
@@ -189,6 +192,9 @@ window.addEventListener('load', () => {
     }
     // Hide the loading overlay once the page is fully loaded
     loadingOverlay.style.display = 'none';
+
+    // Hide the chat container initially
+    chatContainer.classList.add('hidden');
 });
 
 loginForm.addEventListener('submit', function(event) {
@@ -221,14 +227,20 @@ function updateFontSize() {
 }
 
 // Box size adjustment controls
-increaseBoxSizeButton.addEventListener('click', () => {
-    currentBoxSize += 20;
-    updateBoxSize();
-});
+document.addEventListener('DOMContentLoaded', () => {
+    const increaseBoxSizeButton = document.getElementById('increase-box-size');
+    const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
+    const chatBox = document.querySelector('.chat-box');
 
-decreaseBoxSizeButton.addEventListener('click', () => {
-    currentBoxSize -= 20;
-    updateBoxSize();
+    increaseBoxSizeButton.addEventListener('click', () => {
+        const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
+        chatBox.style.height = `${currentHeight + 20}px`; // Increase height by 20px
+    });
+
+    decreaseBoxSizeButton.addEventListener('click', () => {
+        const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
+        chatBox.style.height = `${currentHeight - 20}px`; // Decrease height by 20px
+    });
 });
 
 function updateBoxSize() {
