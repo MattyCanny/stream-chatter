@@ -20,7 +20,7 @@ let isListenerAttached = false; // Flag to track event listener attachment
 const recentMessages = new Map(); // Map to store recent messages with timestamps
 const messageTimeout = 5000; // Time window in milliseconds to consider messages as duplicates
 
-function addChatMessage(username, message) {
+function addChatMessage(username, message, badges) {
     const now = Date.now();
 
     // Check if a similar message has been received from the same user within the time window
@@ -41,7 +41,7 @@ function addChatMessage(username, message) {
         chatBox = document.createElement('div');
         chatBox.id = username;
         chatBox.className = 'chat-box';
-        chatBox.innerHTML = `<div class="username">${username}</div><div class="messages"></div>`;
+        chatBox.innerHTML = `<div class="username">${getBadgesHTML(badges)}${username}</div><div class="messages"></div>`;
         chatContainer.appendChild(chatBox); // Append to the end to maintain order
     } else {
         // Move the chat box to the top
@@ -52,9 +52,17 @@ function addChatMessage(username, message) {
     const messagesDiv = chatBox.querySelector('.messages');
     const messageElement = document.createElement('div');
     const timestamp = new Date().toLocaleTimeString(); // Get the current time as a string
-    messageElement.innerHTML = `${message} <span class="timestamp">${timestamp}</span>`;
+    messageElement.innerHTML = `<span class="timestamp">${timestamp}</span> ${message}`;
     messageElement.style.fontSize = `${currentFontSize}px`; // Set the font size
     messagesDiv.appendChild(messageElement);
+}
+
+function getBadgesHTML(badges) {
+    if (!badges) return '';
+    return Object.keys(badges).map(badge => {
+        const badgeUrl = `https://static-cdn.jtvnw.net/badges/v1/${badges[badge]}/1`;
+        return `<img src="${badgeUrl}" class="badge" alt="${badge}">`;
+    }).join('');
 }
 
 // OAuth and tmi.js setup
@@ -107,8 +115,9 @@ function connectToTwitchChat(token, username, channelName) {
             if(self) return; // Ignore messages from the bot itself
 
             const displayName = tags['display-name'] || tags['username'];
+            const badges = tags['badges']; // Get badges from tags
             console.log(`Message received from ${displayName}: ${message}`);
-            addChatMessage(displayName, message);
+            addChatMessage(displayName, message, badges);
         });
         isListenerAttached = true; // Set the flag to true after attaching the listener
     }

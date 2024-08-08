@@ -160,10 +160,15 @@ body {
 }
 
 /* Add these styles to your CSS file */
+.badge {
+    margin-right: 5px; /* Space between badges and username */
+    vertical-align: middle; /* Align badges with text */
+}
+
 .timestamp {
     font-size: 12px;
     color: #888;
-    margin-left: 10px;
+    margin-right: 10px; /* Adjusted to add space after the timestamp */
     display: none; /* Initially hidden */
 }
 
