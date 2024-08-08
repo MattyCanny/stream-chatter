@@ -34,23 +34,17 @@ function getOAuthToken() {
     return urlParams.get('access_token');
 }
 
-function authenticate() {
+function authenticate(username, channelName) {
     const token = getOAuthToken();
     if (!token) {
         const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scopes}`;
         window.location = authUrl;
     } else {
-        // Prompt for the channel name after authentication
-        const channelName = prompt("Enter the Twitch channel name:");
-        if (channelName) {
-            connectToTwitchChat(token, channelName);
-        } else {
-            alert("Channel name is required to connect to Twitch chat.");
-        }
+        connectToTwitchChat(token, username, channelName);
     }
 }
 
-function connectToTwitchChat(token, channelName) {
+function connectToTwitchChat(token, username, channelName) {
     const client = new tmi.Client({
         options: { debug: true },
         connection: {
@@ -58,7 +52,7 @@ function connectToTwitchChat(token, channelName) {
             secure: true
         },
         identity: {
-            username: 'your_twitch_username',
+            username: username,
             password: `oauth:${token}`
         },
         channels: [ channelName ]
@@ -69,9 +63,16 @@ function connectToTwitchChat(token, channelName) {
     client.on('message', (channel, tags, message, self) => {
         if(self) return; // Ignore messages from the bot itself
 
-        const username = tags['display-name'] || tags['username'];
-        addChatMessage(username, message);
+        const displayName = tags['display-name'] || tags['username'];
+        addChatMessage(displayName, message);
     });
 }
 
-authenticate();
+document.getElementById('login-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const channelName = document.getElementById('channel').value;
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('chat-container').style.display = 'block';
+    authenticate(username, channelName);
+});
