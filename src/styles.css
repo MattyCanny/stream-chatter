@@ -131,7 +131,7 @@ body {
 #chat-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust the minmax value as needed */
-    gap: 10px;
+    gap: 20px; /* Add a gap between chat boxes */
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
