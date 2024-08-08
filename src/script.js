@@ -54,11 +54,11 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
             </div>
             <div class="messages"></div>`;
         chatContainer.appendChild(chatBox); // Append to the end to maintain order
-    } else {
-        // Move the chat box to the top
-        chatContainer.removeChild(chatBox);
-        chatContainer.insertBefore(chatBox, chatContainer.firstChild);
     }
+
+    // Move the chat box to the top
+    chatContainer.removeChild(chatBox);
+    chatContainer.insertBefore(chatBox, chatContainer.firstChild);
 
     const messagesDiv = chatBox.querySelector('.messages');
     const messageElement = document.createElement('div');
