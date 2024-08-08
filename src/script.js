@@ -9,12 +9,15 @@ const channelLogoElement = document.getElementById('channel-logo');
 const increaseFontButton = document.getElementById('increase-font');
 const decreaseFontButton = document.getElementById('decrease-font');
 const loadingOverlay = document.getElementById('loading-overlay');
+const increaseBoxSizeButton = document.getElementById('increase-box-size');
+const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
 
 let currentFontSize = 16; // Default font size
 let client; // Declare client variable outside the function
 let isListenerAttached = false; // Flag to track event listener attachment
 const recentMessages = new Map(); // Map to store recent messages with timestamps
 const messageTimeout = 5000; // Time window in milliseconds to consider messages as duplicates
+let currentBoxSize = 200; // Default box size
 
 function addChatMessage(username, message) {
     const now = Date.now();
@@ -167,4 +170,20 @@ function updateFontSize() {
     messageElements.forEach(element => {
         element.style.fontSize = `${currentFontSize}px`;
     });
+}
+
+// Box size adjustment controls
+increaseBoxSizeButton.addEventListener('click', () => {
+    currentBoxSize += 20;
+    updateBoxSize();
+});
+
+decreaseBoxSizeButton.addEventListener('click', () => {
+    currentBoxSize -= 20;
+    updateBoxSize();
+});
+
+function updateBoxSize() {
+    const chatContainer = document.getElementById('chat-container');
+    chatContainer.style.gridTemplateColumns = `repeat(auto-fill, minmax(${currentBoxSize}px, 1fr))`;
 }
