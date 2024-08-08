@@ -111,7 +111,14 @@ const scopes = 'chat:read chat:edit';
 
 function getOAuthToken() {
     const urlParams = new URLSearchParams(window.location.hash.substring(1));
-    return urlParams.get('access_token');
+    const token = urlParams.get('access_token');
+    
+    // Remove the access token from the URL
+    if (token) {
+        history.replaceState(null, null, ' ');
+    }
+    
+    return token;
 }
 
 function authenticate(username, channelName) {
