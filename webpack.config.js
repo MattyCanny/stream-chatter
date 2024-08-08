@@ -1,8 +1,9 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/script.js',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
@@ -10,20 +11,23 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+            },
+            {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
                 },
             },
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
-            },
         ],
     },
     plugins: [
-        new Dotenv()
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+        }),
+        new Dotenv(),
     ],
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
