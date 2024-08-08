@@ -44,8 +44,14 @@ function authenticate(username, channelName) {
     }
 }
 
+let client; // Declare client variable outside the function
+
 function connectToTwitchChat(token, username, channelName) {
-    const client = new tmi.Client({
+    if (client) {
+        client.disconnect(); // Disconnect existing client if any
+    }
+
+    client = new tmi.Client({
         options: { debug: true },
         connection: {
             reconnect: true,
@@ -65,6 +71,16 @@ function connectToTwitchChat(token, username, channelName) {
 
         const displayName = tags['display-name'] || tags['username'];
         addChatMessage(displayName, message);
+    });
+
+    // Use the server-side proxy for API requests
+    fetch(`/proxy?url=${encodeURIComponent('https://api.twitch.tv/kraken/chat/emoticon_images?emotesets=0,793,19194,213,304,457,793,19194,213,304,457')}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
     });
 }
 
