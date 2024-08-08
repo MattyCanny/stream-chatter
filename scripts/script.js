@@ -25,8 +25,8 @@ function addChatMessage(username, message) {
 }
 
 // OAuth and tmi.js setup
-const clientId = process.env.CLIENT_ID || 'your_client_id';
-const redirectUri = process.env.REDIRECT_URI || 'https://twitch-chatter.vercel.app'; // Ensure this matches exactly
+const clientId = process.env.CLIENT_ID;
+const redirectUri = process.env.REDIRECT_URI;
 const scopes = 'chat:read chat:edit';
 
 function getOAuthToken() {
@@ -40,11 +40,12 @@ function authenticate() {
         const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scopes}`;
         window.location = authUrl;
     } else {
-        connectToTwitchChat(token);
+        const channelName = prompt("Enter the Twitch channel name:");
+        connectToTwitchChat(token, channelName);
     }
 }
 
-function connectToTwitchChat(token) {
+function connectToTwitchChat(token, channelName) {
     const client = new tmi.Client({
         options: { debug: true },
         connection: {
@@ -55,7 +56,7 @@ function connectToTwitchChat(token) {
             username: 'your_twitch_username',
             password: `oauth:${token}`
         },
-        channels: [ 'channel_name' ]
+        channels: [ channelName ]
     });
 
     client.connect();
