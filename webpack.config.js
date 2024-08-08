@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
 
 module.exports = {
     entry: './src/script.js',
@@ -27,8 +27,17 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/index.html',
         }),
-        new Dotenv(),
+        new webpack.DefinePlugin({
+            'process.env.CLIENT_ID': JSON.stringify(process.env.CLIENT_ID),
+            'process.env.REDIRECT_URI': JSON.stringify(process.env.REDIRECT_URI)
+        }),
     ],
+    resolve: {
+        fallback: {
+            "fs": false,
+            "path": false
+        }
+    },
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
         compress: true,

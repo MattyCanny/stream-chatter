@@ -1,11 +1,6 @@
 import './styles.css';
 import './script.js';
 
-// Load environment variables from .env file
-if (typeof process !== 'undefined') {
-    require('dotenv').config();
-}
-
 const chatContainer = document.getElementById('chat-container');
 
 function addChatMessage(username, message) {
