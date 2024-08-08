@@ -17,15 +17,21 @@ body {
     justify-content: space-between; /* Change to space-between */
 }
 
-#top-banner {
-    justify-content: flex-start;
+#website-logo {
+    display: flex;
+    align-items: center;
 }
 
-#bottom-banner {
-    justify-content: flex-end; /* Align items to the right */
+#website-logo img {
+    height: 50px; /* Adjust as needed */
 }
 
-.channel-logo {
+#channel-info {
+    display: flex;
+    align-items: center;
+}
+
+#channel-logo {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -116,4 +122,12 @@ body {
 
 .chat-box .messages {
     margin-top: 5px;
+}
+
+.chat-box .messages div:nth-child(odd) {
+    background-color: #e0e0e0; /* Light grey background for odd comments */
+}
+
+.chat-box .messages div:nth-child(even) {
+    background-color: #f9f9f9; /* Default background for even comments */
 }

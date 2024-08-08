@@ -37,9 +37,7 @@ function addChatMessage(username, message) {
         chatBox.id = username;
         chatBox.className = 'chat-box';
         chatBox.innerHTML = `<div class="username">${username}</div><div class="messages"></div>`;
-        chatContainer.prepend(chatBox);
-    } else {
-        chatContainer.prepend(chatBox);
+        chatContainer.appendChild(chatBox); // Append to the end to maintain order
     }
 
     const messagesDiv = chatBox.querySelector('.messages');
