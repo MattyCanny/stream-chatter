@@ -199,18 +199,16 @@ window.addEventListener('load', () => {
             loginContainer.style.display = 'none';
             chatContainer.style.display = 'block';
             connectToTwitchChat(token, username, channelName);
-            // Set the channel logo source and show the channel icon
+            // Set the channel logo source
             channelIcon.src = channelLogoUrl;
-            channelIcon.classList.remove('hidden');
             channelNameElement.textContent = channelName;
         }
     }
     // Hide the loading overlay once the page is fully loaded
     loadingOverlay.style.display = 'none';
 
-    // Hide the chat container and channel icon initially
+    // Hide the chat container initially
     chatContainer.classList.add('hidden');
-    channelIcon.classList.add('hidden');
 });
 
 loginForm.addEventListener('submit', function(event) {
