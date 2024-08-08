@@ -35,16 +35,18 @@
     </div>
     <div id="chat-container" style="display:none;"></div>
     <div id="bottom-bar">
-        <label>
-            <input type="checkbox" id="toggle-timestamps"> Show Timestamps
-        </label>
-        <div class="font-controls">
-            <button id="increase-font" class="btn">A+</button>
-            <button id="decrease-font" class="btn">A-</button>
+        <div id="left-controls">
+            <button id="increase-font">A+</button>
+            <button id="decrease-font">A-</button>
         </div>
-        <div class="box-size-controls">
-            <button id="increase-box-size" class="btn">Increase Box Size</button>
-            <button id="decrease-box-size" class="btn">Decrease Box Size</button>
+        <div id="center-controls">
+            <button id="increase-box-size">▢+</button>
+            <button id="decrease-box-size">▢-</button>
+        </div>
+        <div id="right-controls">
+            <label>
+                <input type="checkbox" id="toggle-timestamps"> Show Timestamps
+            </label>
         </div>
     </div>
     <script src="bundle.js"></script>

@@ -165,8 +165,18 @@ body {
     color: #fff;
     padding: 10px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+}
+
+#left-controls, #center-controls, #right-controls {
+    display: flex;
+    align-items: center;
+}
+
+#center-controls {
+    flex-grow: 1;
+    justify-content: center;
 }
 
 /* Add these styles to your CSS file */
