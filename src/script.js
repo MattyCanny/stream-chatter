@@ -1,6 +1,8 @@
 import './styles.css';
 
 const chatContainer = document.getElementById('chat-container');
+const loginContainer = document.getElementById('login-container');
+const loginForm = document.getElementById('login-form');
 
 function addChatMessage(username, message) {
     let chatBox = document.getElementById(username);
@@ -65,11 +67,27 @@ function connectToTwitchChat(token, username, channelName) {
     });
 }
 
-document.getElementById('login-form').addEventListener('submit', function(event) {
+// Check for access token on page load
+window.addEventListener('load', () => {
+    const token = getOAuthToken();
+    if (token) {
+        const username = localStorage.getItem('username');
+        const channelName = localStorage.getItem('channelName');
+        if (username && channelName) {
+            loginContainer.style.display = 'none';
+            chatContainer.style.display = 'block';
+            connectToTwitchChat(token, username, channelName);
+        }
+    }
+});
+
+loginForm.addEventListener('submit', function(event) {
     event.preventDefault();
     const username = document.getElementById('username').value;
     const channelName = document.getElementById('channel').value;
-    document.getElementById('login-container').style.display = 'none';
-    document.getElementById('chat-container').style.display = 'block';
+    localStorage.setItem('username', username);
+    localStorage.setItem('channelName', channelName);
+    loginContainer.style.display = 'none';
+    chatContainer.style.display = 'block';
     authenticate(username, channelName);
 });
