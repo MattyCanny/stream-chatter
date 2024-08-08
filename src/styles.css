@@ -196,9 +196,9 @@ body {
 
 /* Add these styles to your CSS file */
 .profile-image {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border-radius: 20%;
     margin-right: 5px; /* Space between profile image and badges */
     vertical-align: middle; /* Align profile image with text */
 }
