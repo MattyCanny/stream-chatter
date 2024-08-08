@@ -54,7 +54,9 @@ function authenticate(username, channelName) {
 }
 
 function connectToTwitchChat(token, username, channelName) {
+    console.log('Connecting to Twitch chat...');
     if (client) {
+        console.log('Disconnecting existing client...');
         client.disconnect(); // Disconnect existing client if any
     }
 
@@ -75,10 +77,12 @@ function connectToTwitchChat(token, username, channelName) {
 
     // Ensure the event listener is attached only once
     if (!isListenerAttached) {
+        console.log('Attaching event listener...');
         client.on('message', (channel, tags, message, self) => {
             if(self) return; // Ignore messages from the bot itself
 
             const displayName = tags['display-name'] || tags['username'];
+            console.log(`Message received from ${displayName}: ${message}`);
             addChatMessage(displayName, message);
         });
         isListenerAttached = true; // Set the flag to true after attaching the listener
