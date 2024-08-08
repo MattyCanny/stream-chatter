@@ -83,10 +83,9 @@ function getBadgesHTML(badges) {
 }
 
 function fetchProfileImageUrl(username, callback) {
-    const token = getOAuthToken(); // Ensure the token is fetched correctly
     fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${getOAuthToken()}`,
             'Client-ID': clientId
         }
     })
@@ -96,7 +95,6 @@ function fetchProfileImageUrl(username, callback) {
             const profileImageUrl = data.data[0].profile_image_url;
             callback(profileImageUrl);
         } else {
-            console.error('No data found for user:', username);
             callback(null);
         }
     })
@@ -107,22 +105,13 @@ function fetchProfileImageUrl(username, callback) {
 }
 
 // OAuth and tmi.js setup
-const clientId = process.env.CLIENT_ID; // Ensure this is correctly set
-const redirectUri = process.env.REDIRECT_URI; // Ensure this is correctly set
+const clientId = process.env.CLIENT_ID;
+const redirectUri = process.env.REDIRECT_URI;
 const scopes = 'chat:read chat:edit';
 
 function getOAuthToken() {
     const urlParams = new URLSearchParams(window.location.hash.substring(1));
-    const token = urlParams.get('access_token');
-    
-    // Remove the access token from the URL and add the channel name
-    if (token) {
-        const channelName = localStorage.getItem('channelName');
-        const newUrl = channelName ? `/${channelName}` : '/';
-        history.replaceState(null, null, newUrl);
-    }
-    
-    return token;
+    return urlParams.get('access_token');
 }
 
 function authenticate(username, channelName) {
@@ -170,11 +159,7 @@ function connectToTwitchChat(token, username, channelName) {
             console.log(`Message received from ${displayName}: ${message}`);
 
             fetchProfileImageUrl(displayName, (profileImageUrl) => {
-                if (profileImageUrl) {
-                    addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
-                } else {
-                    console.error('Profile image URL is null for user:', displayName);
-                }
+                addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
             });
         });
         isListenerAttached = true; // Set the flag to true after attaching the listener
@@ -214,16 +199,18 @@ window.addEventListener('load', () => {
             loginContainer.style.display = 'none';
             chatContainer.style.display = 'block';
             connectToTwitchChat(token, username, channelName);
-            // Set the channel logo source
+            // Set the channel logo source and show the channel icon
             channelIcon.src = channelLogoUrl;
+            channelIcon.classList.remove('hidden');
             channelNameElement.textContent = channelName;
         }
     }
     // Hide the loading overlay once the page is fully loaded
     loadingOverlay.style.display = 'none';
 
-    // Hide the chat container initially
+    // Hide the chat container and channel icon initially
     chatContainer.classList.add('hidden');
+    channelIcon.classList.add('hidden');
 });
 
 loginForm.addEventListener('submit', function(event) {
@@ -259,21 +246,16 @@ function updateFontSize() {
 document.addEventListener('DOMContentLoaded', () => {
     const increaseBoxSizeButton = document.getElementById('increase-box-size');
     const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
+    const chatBox = document.querySelector('.chat-box');
 
     increaseBoxSizeButton.addEventListener('click', () => {
-        const chatBoxes = document.querySelectorAll('.chat-box');
-        chatBoxes.forEach(chatBox => {
-            const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
-            chatBox.style.height = `${currentHeight + 20}px`; // Increase height by 20px
-        });
+        const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
+        chatBox.style.height = `${currentHeight + 20}px`; // Increase height by 20px
     });
 
     decreaseBoxSizeButton.addEventListener('click', () => {
-        const chatBoxes = document.querySelectorAll('.chat-box');
-        chatBoxes.forEach(chatBox => {
-            const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
-            chatBox.style.height = `${currentHeight - 20}px`; // Decrease height by 20px
-        });
+        const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
+        chatBox.style.height = `${currentHeight - 20}px`; // Decrease height by 20px
     });
 });
 
