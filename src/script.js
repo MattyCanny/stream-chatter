@@ -246,16 +246,21 @@ function updateFontSize() {
 document.addEventListener('DOMContentLoaded', () => {
     const increaseBoxSizeButton = document.getElementById('increase-box-size');
     const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
-    const chatBox = document.querySelector('.chat-box');
 
     increaseBoxSizeButton.addEventListener('click', () => {
-        const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
-        chatBox.style.height = `${currentHeight + 20}px`; // Increase height by 20px
+        const chatBoxes = document.querySelectorAll('.chat-box');
+        chatBoxes.forEach(chatBox => {
+            const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
+            chatBox.style.height = `${currentHeight + 20}px`; // Increase height by 20px
+        });
     });
 
     decreaseBoxSizeButton.addEventListener('click', () => {
-        const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
-        chatBox.style.height = `${currentHeight - 20}px`; // Decrease height by 20px
+        const chatBoxes = document.querySelectorAll('.chat-box');
+        chatBoxes.forEach(chatBox => {
+            const currentHeight = parseInt(window.getComputedStyle(chatBox).height, 10);
+            chatBox.style.height = `${currentHeight - 20}px`; // Decrease height by 20px
+        });
     });
 });
 
