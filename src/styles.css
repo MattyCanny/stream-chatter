@@ -174,7 +174,7 @@ body {
     border-bottom: 1px solid #ccc;
     position: sticky;
     top: 0;
-    z-index: 1;
+    /*z-index: 1;*/
 }
 
 .chat-box .display-name {
@@ -189,11 +189,11 @@ body {
     flex-grow: 1;
 }
 
-.chat-box .messages div:nth-child(odd) {
-    background-color: #c8e5ff; /* Light grey background for odd comments */
+.chat-box .messages div:nth-child(even) {
+    background-color: #ead8ff; /* Light grey background for odd comments */
 }
 
-.chat-box .messages div:nth-child(even) {
+.chat-box .messages div:nth-child(odd) {
     background-color: #f9f9f9; /* Default background for even comments */
 }
 
