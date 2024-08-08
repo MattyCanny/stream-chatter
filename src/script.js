@@ -9,16 +9,10 @@ const channelLogoElement = document.getElementById('channel-logo');
 const increaseFontButton = document.getElementById('increase-font');
 const decreaseFontButton = document.getElementById('decrease-font');
 
-const lastMessages = {}; // Object to store the last message received for each user
 let currentFontSize = 16; // Default font size
+let client; // Declare client variable outside the function
 
 function addChatMessage(username, message) {
-    // Check if the new message is the same as the last message received from the same user
-    if (lastMessages[username] === message) {
-        console.log('Duplicate message detected, skipping:', message);
-        return; // Skip adding the message
-    }
-
     let chatBox = document.getElementById(username);
 
     if (!chatBox) {
@@ -36,9 +30,6 @@ function addChatMessage(username, message) {
     messageElement.textContent = message;
     messageElement.style.fontSize = `${currentFontSize}px`; // Set the font size
     messagesDiv.appendChild(messageElement);
-
-    // Update the last message received for the user
-    lastMessages[username] = message;
 }
 
 // OAuth and tmi.js setup
@@ -61,8 +52,6 @@ function authenticate(username, channelName) {
     }
 }
 
-let client; // Declare client variable outside the function
-
 function connectToTwitchChat(token, username, channelName) {
     if (client) {
         client.disconnect(); // Disconnect existing client if any
@@ -83,6 +72,7 @@ function connectToTwitchChat(token, username, channelName) {
 
     client.connect();
 
+    // Ensure the event listener is attached only once
     client.on('message', (channel, tags, message, self) => {
         if(self) return; // Ignore messages from the bot itself
 
