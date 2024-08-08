@@ -1,9 +1,22 @@
 {
+  "name": "twitch-chat-display",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "start": "webpack serve --mode development"
+  },
   "devDependencies": {
-    "css-loader": "^7.1.2",
-    "dotenv-webpack": "^8.1.0",
-    "style-loader": "^4.0.0",
-    "webpack": "^5.93.0",
-    "webpack-cli": "^5.1.4"
+    "dotenv-webpack": "^7.0.2",
+    "webpack": "^5.64.4",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.1",
+    "babel-loader": "^8.2.3",
+    "css-loader": "^6.5.1",
+    "style-loader": "^3.3.1"
+  },
+  "dependencies": {
+    "tmi.js": "^1.8.5"
   }
 }
