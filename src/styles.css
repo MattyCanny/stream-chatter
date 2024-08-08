@@ -124,8 +124,8 @@ body {
 }
 
 #chat-container {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6 columns */
     gap: 10px;
     width: 100%;
     padding: 20px;
@@ -140,7 +140,6 @@ body {
     background-color: #f9f9f9;
     border-radius: 4px;
     height: 200px; /* Fixed height */
-    width: calc(16.66% - 20px); /* 6 columns with gap */
     overflow-y: auto; /* Make the chat box scrollable */
 }
 
