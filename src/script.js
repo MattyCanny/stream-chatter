@@ -66,7 +66,9 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
     const timestamp = new Date().toLocaleTimeString(); // Get the current time as a string
     messageElement.innerHTML = `<span class="timestamp">${timestamp}</span> ${message}`;
     messageElement.style.fontSize = `${currentFontSize}px`; // Set the font size
-    messagesDiv.appendChild(messageElement);
+
+    // Prepend the new message element to the top
+    messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
 
     // Show the chat container if it's hidden
     chatContainer.classList.remove('hidden');
