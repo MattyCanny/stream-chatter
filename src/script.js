@@ -1,5 +1,4 @@
 import './styles.css';
-import './script.js';
 
 const chatContainer = document.getElementById('chat-container');
 
