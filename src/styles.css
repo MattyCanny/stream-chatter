@@ -193,6 +193,9 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0; /* Ensure the bottom bar does not shrink */
+    position: fixed; /* Fix the bottom bar to the bottom of the screen */
+    bottom: 0; /* Position it at the bottom */
+    width: 100%; /* Ensure it spans the full width of the screen */
 }
 
 #left-controls, #center-controls, #right-controls {
