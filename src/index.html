@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twitch Chat Display</title>
+    <title>Stream Chatter</title>
     <style>
         /* Inline critical CSS for loading screen */
         body {
@@ -28,30 +28,34 @@
         <div class="loading-spinner"></div>
     </div>
     <div id="content" style="display: none;">
-        <div id="top-banner" class="banner">
-            <div id="website-logo" class="website-logo">
-                <img src="path/to/website-logo.png" alt="Website Logo">
-            </div>
-            <div id="channel-info" class="channel-info">
-                <img id="channel-logo" src="" alt="Channel Logo" class="channel-logo">
-                <span id="channel-name" class="channel-name"></span>
-            </div>
-        </div>
-        <div id="login-container" class="centered-container">
-            <form id="login-form" class="login-form">
-                <h2>Login to Twitch Chat</h2>
-                <div class="form-group">
-                    <label for="username">Twitch Username:</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label for="channel">Channel Name:</label>
-                    <input type="text" id="channel" name="channel" required>
-                </div>
-                <button type="submit" class="btn">Login</button>
-            </form>
-        </div>
         <div id="main-container">
+            <div class="banner">
+                <div id="top-banner" class="banner">
+                    <div id="website-logo" class="website-logo">
+                        <img src="path/to/website-logo.png" alt="Website Logo">
+                    </div>
+                    <div id="channel-info" class="channel-info">
+                        <img id="channel-logo" src="" alt="Channel Logo" class="channel-logo">
+                        <span id="channel-name" class="channel-name"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="centered-container">
+                <div class="login-form">
+                    <form id="login-form" class="login-form">
+                        <h2>Login to Twitch Chat</h2>
+                        <div class="form-group">
+                            <label for="username">Twitch Username:</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="channel">Channel Name:</label>
+                            <input type="text" id="channel" name="channel" required>
+                        </div>
+                        <button type="submit" class="btn">Login</button>
+                    </form>
+                </div>
+            </div>
             <div id="chat-container" class="hidden">
             </div>
             <div id="bottom-bar">

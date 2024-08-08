@@ -17,6 +17,54 @@ body {
     overflow: hidden; /* Ensure no overflow */
 }
 
+.banner {
+    background-color: #6441a5;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Change to space-between */
+    flex-shrink: 0; /* Ensure the banner does not shrink */
+}
+
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    flex-shrink: 0; /* Ensure the centered container does not shrink */
+}
+
+.login-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+#chat-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust the minmax value as needed */
+    gap: 10px; /* Add a gap between chat boxes */
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    flex-grow: 1; /* Allow the chat container to grow and fill available space */
+    height: auto; /* Remove fixed height */
+}
+
+#bottom-bar {
+    background-color: #6441a5;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0; /* Ensure the bottom bar does not shrink */
+}
+
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -44,15 +92,6 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-.banner {
-    background-color: #6441a5;
-    color: #fff;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Change to space-between */
-}
-
 #website-logo {
     display: flex;
     align-items: center;
@@ -77,76 +116,6 @@ body {
 .channel-name {
     font-size: 24px;
     font-weight: bold;
-}
-
-.centered-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-}
-
-.login-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-}
-
-.login-form h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.btn {
-    padding: 10px;
-    background-color: #6441a5; /* Twitch color */
-    color: #fff;
-    border: none;
-    border-radius: 4px; /* Rounded corners */
-    cursor: pointer;
-    font-size: 16px;
-    margin: 5px; /* Add some margin between buttons */
-}
-
-.btn:hover {
-    background-color: #503a85; /* Darker Twitch color on hover */
-}
-
-.btn:active {
-    background-color: #3e2d6b; /* Even darker Twitch color on active */
-}
-
-#chat-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust the minmax value as needed */
-    gap: 10px; /* Add a gap between chat boxes */
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-    flex-grow: 1; /* Allow the chat container to grow and fill available space */
-    height: auto; /* Remove fixed height */
 }
 
 .chat-box {
@@ -183,16 +152,6 @@ body {
 
 .chat-box .messages div:nth-child(even) {
     background-color: #f9f9f9; /* Default background for even comments */
-}
-
-#bottom-bar {
-    background-color: #6441a5;
-    color: #fff;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0; /* Ensure the bottom bar does not shrink */
 }
 
 #left-controls, #center-controls, #right-controls {
