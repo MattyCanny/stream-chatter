@@ -61,7 +61,7 @@ function getBadgesHTML(badges) {
     if (!badges) return '';
     return Object.keys(badges).map(badge => {
         const badgeVersion = badges[badge];
-        const badgeUrl = `https://static-cdn.jtvnw.net/badges/v1/${badge}/${badgeVersion}/1`;
+        const badgeUrl = `https://static-cdn.jtvnw.net/badges/v1/${badge}/default/${badgeVersion}/1`;
         return `<img src="${badgeUrl}" class="badge" alt="${badge}">`;
     }).join('');
 }
