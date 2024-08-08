@@ -1,4 +1,5 @@
 import './styles.css';
+import tmi from 'tmi.js';
 
 const chatContainer = document.getElementById('chat-container');
 const loginContainer = document.getElementById('login-container');
