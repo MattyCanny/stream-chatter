@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Twitch Chat Display</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="top-banner" class="banner">
+        <img id="channel-logo" src="" alt="Channel Logo" class="channel-logo">
+        <span id="channel-name" class="channel-name"></span>
+    </div>
     <div id="login-container" class="centered-container">
         <form id="login-form" class="login-form">
             <h2>Login to Twitch Chat</h2>
@@ -21,6 +26,10 @@
         </form>
     </div>
     <div id="chat-container" style="display:none;"></div>
+    <div id="bottom-banner" class="banner">
+        <button id="increase-font" class="btn">A+</button>
+        <button id="decrease-font" class="btn">A-</button>
+    </div>
     <script src="bundle.js"></script>
 </body>
 </html>

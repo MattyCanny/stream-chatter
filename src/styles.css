@@ -4,16 +4,44 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
     height: 100vh;
+}
+
+.banner {
+    background-color: #6441a5;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#top-banner {
+    justify-content: flex-start;
+}
+
+#bottom-banner {
+    justify-content: center;
+}
+
+.channel-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.channel-name {
+    font-size: 24px;
+    font-weight: bold;
 }
 
 .centered-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    flex-grow: 1;
 }
 
 .login-form {
@@ -65,11 +93,13 @@ body {
 
 #chat-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 10px;
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
 .chat-box {

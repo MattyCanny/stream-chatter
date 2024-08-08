@@ -4,8 +4,13 @@ import tmi from 'tmi.js';
 const chatContainer = document.getElementById('chat-container');
 const loginContainer = document.getElementById('login-container');
 const loginForm = document.getElementById('login-form');
+const channelNameElement = document.getElementById('channel-name');
+const channelLogoElement = document.getElementById('channel-logo');
+const increaseFontButton = document.getElementById('increase-font');
+const decreaseFontButton = document.getElementById('decrease-font');
 
 const lastMessages = {}; // Object to store the last message received for each user
+let currentFontSize = 16; // Default font size
 
 function addChatMessage(username, message) {
     // Check if the new message is the same as the last message received from the same user
@@ -29,6 +34,7 @@ function addChatMessage(username, message) {
     const messagesDiv = chatBox.querySelector('.messages');
     const messageElement = document.createElement('div');
     messageElement.textContent = message;
+    messageElement.style.fontSize = `${currentFontSize}px`; // Set the font size
     messagesDiv.appendChild(messageElement);
 
     // Update the last message received for the user
@@ -83,6 +89,25 @@ function connectToTwitchChat(token, username, channelName) {
         const displayName = tags['display-name'] || tags['username'];
         addChatMessage(displayName, message);
     });
+
+    // Fetch and display channel information
+    fetch(`https://api.twitch.tv/helix/users?login=${channelName}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Client-ID': clientId
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.data && data.data.length > 0) {
+            const channelInfo = data.data[0];
+            channelNameElement.textContent = channelInfo.display_name;
+            channelLogoElement.src = channelInfo.profile_image_url;
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching channel information:', error);
+    });
 }
 
 // Check for access token on page load
@@ -109,3 +134,21 @@ loginForm.addEventListener('submit', function(event) {
     chatContainer.style.display = 'block';
     authenticate(username, channelName);
 });
+
+// Font size adjustment controls
+increaseFontButton.addEventListener('click', () => {
+    currentFontSize += 2;
+    updateFontSize();
+});
+
+decreaseFontButton.addEventListener('click', () => {
+    currentFontSize -= 2;
+    updateFontSize();
+});
+
+function updateFontSize() {
+    const messageElements = document.querySelectorAll('.messages div');
+    messageElements.forEach(element => {
+        element.style.fontSize = `${currentFontSize}px`;
+    });
+}
