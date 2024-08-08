@@ -43,7 +43,6 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
     let chatBox = document.getElementById(username);
 
     if (!chatBox) {
-        console.log('Creating new chat box for:', username);
         chatBox = document.createElement('div');
         chatBox.id = username;
         chatBox.className = 'chat-box';
@@ -56,7 +55,6 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
             <div class="messages"></div>`;
         chatContainer.appendChild(chatBox); // Append to the end to maintain order
     } else {
-        console.log('Moving existing chat box for:', username);
         // Move the chat box to the top
         chatContainer.removeChild(chatBox);
         chatContainer.insertBefore(chatBox, chatContainer.firstChild);
