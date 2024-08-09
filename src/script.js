@@ -83,7 +83,7 @@ function getBadgesHTML(badges) {
     }).join('');
 }
 
-function fetchProfileImageUrl(username, callback) {
+function fetchProfileImageUrl(username, token, callback) {
     fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
             'Authorization': `Bearer ${token}`, // Ensure the token is correct
@@ -168,7 +168,9 @@ function connectToTwitchChat(token, username, channelName) {
             const profileColor = tags['color']; // Get profile color from tags
             //console.log(`Message received from ${displayName}: ${message}`);
 
-            fetchProfileImageUrl(displayName, (profileImageUrl) => {
+            const token = getOAuthToken(); // Get the token
+
+            fetchProfileImageUrl(displayName, token, (profileImageUrl) => {
                 addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
             });
         });
