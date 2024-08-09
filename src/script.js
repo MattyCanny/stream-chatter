@@ -141,7 +141,8 @@ function connectToTwitchChat(token, username, channelName) {
     }
 
     client = new tmi.Client({
-        options: { debug: true },
+        // set debug to false to stop receiving debug messages
+        options: { debug: false },
         connection: {
             reconnect: true,
             secure: true
