@@ -84,6 +84,9 @@ function getBadgesHTML(badges) {
 }
 
 function fetchProfileImageUrl(username, token, callback) {
+    console.log('Fetching profile image URL for:', username); // Debug log
+    console.log('Using token:', token); // Debug log
+
     fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
             'Authorization': `Bearer ${token}`, // Ensure the token is correct
@@ -109,7 +112,7 @@ function fetchProfileImageUrl(username, token, callback) {
 // OAuth and tmi.js setup
 const clientId = process.env.CLIENT_ID;
 const redirectUri = process.env.REDIRECT_URI;
-const scopes = 'chat:read chat:edit';
+const scopes = 'chat:read chat:edit user:read:email';
 
 function getOAuthToken() {
     const urlParams = new URLSearchParams(window.location.hash.substring(1));
@@ -169,6 +172,11 @@ function connectToTwitchChat(token, username, channelName) {
             //console.log(`Message received from ${displayName}: ${message}`);
 
             const token = getOAuthToken(); // Get the token
+
+            if (!token) {
+                console.error('OAuth token is missing or invalid');
+                return;
+            }
 
             fetchProfileImageUrl(displayName, token, (profileImageUrl) => {
                 addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
