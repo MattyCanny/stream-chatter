@@ -164,7 +164,7 @@ function connectToTwitchChat(token, username, channelName) {
             const displayName = tags['display-name'] || tags['username'];
             const badges = tags['badges']; // Get badges from tags
             const profileColor = tags['color']; // Get profile color from tags
-            console.log(`Message received from ${displayName}: ${message}`);
+            //console.log(`Message received from ${displayName}: ${message}`);
 
             fetchProfileImageUrl(displayName, (profileImageUrl) => {
                 addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
