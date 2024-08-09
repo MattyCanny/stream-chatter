@@ -86,22 +86,23 @@ function getBadgesHTML(badges) {
 function fetchProfileImageUrl(username, callback) {
     fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
-            'Authorization': `Bearer ${getOAuthToken()}`,
-            'Client-ID': clientId
+            'Authorization': `Bearer ${token}`, // Ensure the token is correct
+            'Client-Id': clientId // Ensure the client ID is correct
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.data && data.data.length > 0) {
-            const profileImageUrl = data.data[0].profile_image_url;
-            callback(profileImageUrl);
-        } else {
-            callback(null);
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json();
+    })
+    .then(data => {
+        const profileImageUrl = data.data[0].profile_image_url;
+        callback(profileImageUrl);
     })
     .catch(error => {
-        console.error('Error fetching profile image URL:', error);
-        callback(null);
+        console.error('There was a problem with the fetch operation:', error);
+        callback(null); // Pass null if there was an error
     });
 }
 
@@ -295,4 +296,5 @@ document.querySelectorAll('.chat-box .username').forEach(usernameElement => {
         displayNameElement.textContent = `(${displayName})`;
         usernameElement.appendChild(displayNameElement);
     }
+});
 });
