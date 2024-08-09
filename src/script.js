@@ -120,10 +120,10 @@ function getOAuthToken() {
     const urlParams = new URLSearchParams(window.location.hash.substring(1));
     const token = urlParams.get('access_token');
     
-    // Remove the access token from the URL
-    if (token) {
-        history.replaceState(null, null, ' ');
-    }
+    // // Remove the access token from the URL
+    // if (token) {
+    //     history.replaceState(null, null, ' ');
+    // }
     
     return token;
 }
@@ -173,7 +173,7 @@ async function connectToTwitchChat(token, username, channelName) {
             const profileColor = tags['color']; // Get profile color from tags
             //console.log(`Message received from ${displayName}: ${message}`);
 
-            const token = getOAuthToken(); // Get the token
+            const token = await getOAuthToken(); // Get the token
 
             if (!token) {
                 console.error('OAuth token is missing or invalid');
