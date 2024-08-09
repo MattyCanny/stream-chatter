@@ -297,4 +297,3 @@ document.querySelectorAll('.chat-box .username').forEach(usernameElement => {
         usernameElement.appendChild(displayNameElement);
     }
 });
-});
