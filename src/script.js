@@ -1,6 +1,12 @@
 import './styles.css';
 import tmi from 'tmi.js';
 
+
+// OAuth and tmi.js setup
+const clientId = process.env.CLIENT_ID;
+const redirectUri = process.env.REDIRECT_URI;
+const scopes = 'chat:read chat:edit';
+
 const chatContainer = document.getElementById('chat-container');
 const loginContainer = document.getElementById('login-container');
 const loginForm = document.getElementById('login-form');
@@ -12,6 +18,7 @@ const increaseBoxSizeButton = document.getElementById('increase-box-size');
 const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
 const loadingOverlay = document.getElementById('loading-overlay');
 const toggleTimestampsCheckbox = document.getElementById('toggle-timestamps');
+
 
 let currentFontSize = 10; // Default font size
 let currentBoxSize = 140; // Default box size
@@ -83,11 +90,11 @@ function getBadgesHTML(badges) {
     }).join('');
 }
 
-function fetchProfileImageUrl(username, token, callback) {
+async function fetchProfileImageUrl(username, token, callback) {
     console.log('Fetching profile image URL for:', username); // Debug log
     console.log('Using token:', token); // Debug log
 
-    fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
+    return fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
             'Authorization': `Bearer ${token}`, // Ensure the token is correct
             'Client-Id': clientId // Ensure the client ID is correct
@@ -109,11 +116,6 @@ function fetchProfileImageUrl(username, token, callback) {
     });
 }
 
-// OAuth and tmi.js setup
-const clientId = process.env.CLIENT_ID;
-const redirectUri = process.env.REDIRECT_URI;
-const scopes = 'chat:read chat:edit';
-
 function getOAuthToken() {
     const urlParams = new URLSearchParams(window.location.hash.substring(1));
     const token = urlParams.get('access_token');
@@ -126,17 +128,17 @@ function getOAuthToken() {
     return token;
 }
 
-function authenticate(username, channelName) {
+async function authenticate(username, channelName) {
     const token = getOAuthToken();
     if (!token) {
         const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scopes}`;
         window.location = authUrl;
     } else {
-        connectToTwitchChat(token, username, channelName);
+        return connectToTwitchChat(token, username, channelName);
     }
 }
 
-function connectToTwitchChat(token, username, channelName) {
+async function connectToTwitchChat(token, username, channelName) {
     console.log('Connecting to Twitch chat...');
     if (client) {
         console.log('Disconnecting existing client...');
@@ -158,7 +160,7 @@ function connectToTwitchChat(token, username, channelName) {
         channels: [ channelName ]
     });
 
-    client.connect();
+    await client.connect();
 
     // Ensure the event listener is attached only once
     if (!isListenerAttached) {
@@ -207,7 +209,7 @@ function connectToTwitchChat(token, username, channelName) {
 }
 
 // Check for access token on page load
-window.addEventListener('load', () => {
+window.addEventListener('load', async() => {
     const token = getOAuthToken();
     const channelIcon = document.getElementById('channel-logo');
     const channelNameElement = document.getElementById('channel-name');
@@ -218,7 +220,7 @@ window.addEventListener('load', () => {
         if (username && channelName) {
             loginContainer.style.display = 'none';
             chatContainer.style.display = 'block';
-            connectToTwitchChat(token, username, channelName);
+            await connectToTwitchChat(token, username, channelName);
             // Set the channel logo source
             channelIcon.src = channelLogoUrl;
             channelNameElement.textContent = channelName;
