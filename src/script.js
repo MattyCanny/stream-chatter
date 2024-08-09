@@ -112,7 +112,7 @@ function fetchProfileImageUrl(username, token, callback) {
 // OAuth and tmi.js setup
 const clientId = process.env.CLIENT_ID;
 const redirectUri = process.env.REDIRECT_URI;
-const scopes = 'chat:read chat:edit user:read:email';
+const scopes = 'chat:read chat:edit';
 
 function getOAuthToken() {
     const urlParams = new URLSearchParams(window.location.hash.substring(1));
