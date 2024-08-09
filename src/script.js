@@ -173,7 +173,7 @@ async function connectToTwitchChat(token, username, channelName) {
             const profileColor = tags['color']; // Get profile color from tags
             //console.log(`Message received from ${displayName}: ${message}`);
 
-            const token = await getOAuthToken(); // Get the token
+            const token = getOAuthToken(); // Get the token
 
             if (!token) {
                 console.error('OAuth token is missing or invalid');
