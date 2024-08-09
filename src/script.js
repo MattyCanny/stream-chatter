@@ -83,7 +83,22 @@ function getBadgesHTML(badges) {
     }).join('');
 }
 
+function getOAuthToken() {
+    const urlParams = new URLSearchParams(window.location.hash.substring(1));
+    const token = urlParams.get('access_token');
+    
+    // Remove the access token from the URL
+    if (token) {
+        history.replaceState(null, null, ' ');
+    }
+    
+    return token;
+}
+
 function fetchProfileImageUrl(username, token, callback) {
+    console.log('Fetching profile image URL for:', username); // Debug log
+    console.log('Using token:', token); // Debug log
+
     fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
             'Authorization': `Bearer ${token}`, // Ensure the token is correct
@@ -110,18 +125,6 @@ function fetchProfileImageUrl(username, token, callback) {
 const clientId = process.env.CLIENT_ID;
 const redirectUri = process.env.REDIRECT_URI;
 const scopes = 'chat:read chat:edit';
-
-function getOAuthToken() {
-    const urlParams = new URLSearchParams(window.location.hash.substring(1));
-    const token = urlParams.get('access_token');
-    
-    // Remove the access token from the URL
-    if (token) {
-        history.replaceState(null, null, ' ');
-    }
-    
-    return token;
-}
 
 function authenticate(username, channelName) {
     const token = getOAuthToken();
@@ -169,6 +172,11 @@ function connectToTwitchChat(token, username, channelName) {
             //console.log(`Message received from ${displayName}: ${message}`);
 
             const token = getOAuthToken(); // Get the token
+
+            if (!token) {
+                console.error('OAuth token is missing or invalid');
+                return;
+            }
 
             fetchProfileImageUrl(displayName, token, (profileImageUrl) => {
                 addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
