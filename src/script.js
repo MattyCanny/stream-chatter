@@ -68,15 +68,15 @@ function addChatMessageBoxes(username, message, badges, profileImageUrl, profile
 
     if (!chatBox) {
         chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
-        chatContainer.insertBefore(chatBox, chatContainer.firstChild);
-    } else {
-        chatContainer.removeChild(chatBox);
-        chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+        chatContainer.appendChild(chatBox); // Append to the end instead of inserting at the beginning
     }
 
     const messagesDiv = chatBox.querySelector('.messages');
     const messageElement = createMessageElement(message);
     messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
+
+    // Move the chat box to the end of the container
+    chatContainer.appendChild(chatBox);
 }
 
 function addChatMessageStandard(username, message, badges, profileImageUrl, profileColor) {
@@ -334,7 +334,8 @@ function updateChatLayout() {
 
     if (currentLayout === 'boxes') {
         const userBoxes = {};
-        allMessages.forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+        // Reverse the order of messages to show most recent first
+        allMessages.slice().reverse().forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
             if (!userBoxes[username]) {
                 userBoxes[username] = createChatBox(username, badges, profileImageUrl, profileColor);
                 chatContainer.appendChild(userBoxes[username]);
@@ -344,7 +345,7 @@ function updateChatLayout() {
             messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
         });
     } else {
-        allMessages.slice().reverse().forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+        allMessages.forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
             const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
             const messagesDiv = chatBox.querySelector('.messages');
             const messageElement = createMessageElement(message);
@@ -405,4 +406,12 @@ document.querySelectorAll('input[name="chat-layout"]').forEach(radio => {
     localStorage.setItem('chatLayout', currentLayout);
     updateChatLayout();
   });
+});
+
+// Add this to your code temporarily for testing
+window.addEventListener('load', () => {
+    for (let i = 0; i < 20; i++) {
+        addChatMessage(`user${i}`, `Test message ${i}`, null, 'https://placekitten.com/50/50', '#000000');
+    }
+    updateChatLayout();
 });
