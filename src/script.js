@@ -52,44 +52,15 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
 
     // Store the message in allMessages
     allMessages.push({ username, message, badges, profileImageUrl, profileColor, timestamp: now });
-
-    if (currentLayout === 'boxes') {
-        addChatMessageBoxes(username, message, badges, profileImageUrl, profileColor);
-    } else {
-        addChatMessageStandard(username, message, badges, profileImageUrl, profileColor);
-    }
+    updateChatLayout();
 
     // Show the chat container if it's hidden
     chatContainer.classList.remove('hidden');
 }
 
-function addChatMessageBoxes(username, message, badges, profileImageUrl, profileColor) {
-    let chatBox = document.getElementById(username);
-
-    if (!chatBox) {
-        chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
-        chatContainer.appendChild(chatBox); // Append to the end instead of inserting at the beginning
-    }
-
-    const messagesDiv = chatBox.querySelector('.messages');
-    const messageElement = createMessageElement(message);
-    messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
-
-    // Move the chat box to the end of the container
-    chatContainer.appendChild(chatBox);
-}
-
-function addChatMessageStandard(username, message, badges, profileImageUrl, profileColor) {
-    const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
-    const messagesDiv = chatBox.querySelector('.messages');
-    const messageElement = createMessageElement(message);
-    messagesDiv.appendChild(messageElement);
-    chatContainer.appendChild(chatBox);
-}
-
 function createChatBox(username, badges, profileImageUrl, profileColor) {
     const chatBox = document.createElement('div');
-    chatBox.id = currentLayout === 'boxes' ? username : `chat-${Date.now()}`;
+    chatBox.id = username;
     chatBox.className = 'chat-box';
     chatBox.innerHTML = `
         <div class="username" data-username="${username}" data-display-name="${username}">
@@ -320,39 +291,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function updateBoxSizes() {
-    if (currentLayout === 'boxes') {
-        const chatBoxes = document.querySelectorAll('.chat-box');
-        chatBoxes.forEach(chatBox => {
-            chatBox.style.height = `${currentBoxSize}px`;
-        });
-    }
+    const chatBoxes = document.querySelectorAll('.chat-box');
+    chatBoxes.forEach(chatBox => {
+        chatBox.style.height = `${currentBoxSize}px`;
+    });
 }
 
 function updateChatLayout() {
-    chatContainer.className = currentLayout === 'boxes' ? 'boxes-layout' : 'standard-layout';
     chatContainer.innerHTML = ''; // Clear existing messages
+  
+    const sortedMessages = currentLayout === 'boxes' 
+      ? Object.values(allMessages.reduce((acc, msg) => {
+          acc[msg.username] = msg;
+          return acc;
+        }, {}))
+      : allMessages.slice().reverse();
 
-    if (currentLayout === 'boxes') {
-        const userBoxes = {};
-        // Reverse the order of messages to show most recent first
-        allMessages.slice().reverse().forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
-            if (!userBoxes[username]) {
-                userBoxes[username] = createChatBox(username, badges, profileImageUrl, profileColor);
-                chatContainer.appendChild(userBoxes[username]);
-            }
-            const messagesDiv = userBoxes[username].querySelector('.messages');
-            const messageElement = createMessageElement(message);
-            messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
-        });
-    } else {
-        allMessages.forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
-            const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
-            const messagesDiv = chatBox.querySelector('.messages');
-            const messageElement = createMessageElement(message);
-            messagesDiv.appendChild(messageElement);
-            chatContainer.appendChild(chatBox);
-        });
-    }
+    sortedMessages.forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+      const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+      const messagesDiv = chatBox.querySelector('.messages');
+      const messageElement = createMessageElement(message);
+      messagesDiv.appendChild(messageElement);
+      chatContainer.appendChild(chatBox);
+    });
 
     updateBoxSizes();
 }

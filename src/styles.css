@@ -152,53 +152,37 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-}
-
-#chat-container.boxes-layout {
   justify-content: flex-start;
 }
 
-#chat-container.standard-layout {
-  flex-direction: column;
-}
-
 .chat-box {
+  width: calc(20% - 10px); /* 5 columns */
+  margin: 5px;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
   border-radius: 4px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin: 5px;
-}
-
-.boxes-layout .chat-box {
-  width: calc(20% - 10px); /* 5 columns, accounting for margins */
-  height: 200px; /* Fixed height for box layout */
-  flex: 0 0 auto;
+  height: 200px; /* Fixed height */
 }
 
 @media (max-width: 1200px) {
-  .boxes-layout .chat-box {
+  .chat-box {
     width: calc(25% - 10px); /* 4 columns for smaller screens */
   }
 }
 
 @media (max-width: 900px) {
-  .boxes-layout .chat-box {
+  .chat-box {
     width: calc(33.33% - 10px); /* 3 columns for even smaller screens */
   }
 }
 
 @media (max-width: 600px) {
-  .boxes-layout .chat-box {
+  .chat-box {
     width: calc(50% - 10px); /* 2 columns for mobile screens */
   }
-}
-
-.standard-layout .chat-box {
-  width: 100%;
-  margin-bottom: 10px;
 }
 
 .chat-box .username {
