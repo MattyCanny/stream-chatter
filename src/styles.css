@@ -248,3 +248,26 @@ body {
 .hidden {
     display: none;
 }
+
+.settings-pane {
+  position: fixed;
+  top: 0;
+  right: -300px; /* Start off-screen */
+  width: 300px;
+  height: 100%;
+  background-color: #f0f0f0;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.settings-pane.open {
+  right: 0;
+}
+
+#toggle-settings {
+  font-size: 20px;
+  padding: 5px 10px;
+}

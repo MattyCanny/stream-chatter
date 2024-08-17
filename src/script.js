@@ -317,3 +317,23 @@ document.querySelectorAll('.chat-box .username').forEach(usernameElement => {
         usernameElement.appendChild(displayNameElement);
     }
 });
+
+// Settings pane toggle functionality
+const toggleSettingsButton = document.getElementById('toggle-settings');
+const settingsPane = document.getElementById('settings-pane');
+const closeSettingsButton = document.getElementById('close-settings');
+
+toggleSettingsButton.addEventListener('click', () => {
+  settingsPane.classList.toggle('open');
+});
+
+closeSettingsButton.addEventListener('click', () => {
+  settingsPane.classList.remove('open');
+});
+
+// Close settings pane when clicking outside of it
+document.addEventListener('click', (event) => {
+  if (!settingsPane.contains(event.target) && event.target !== toggleSettingsButton) {
+    settingsPane.classList.remove('open');
+  }
+});
