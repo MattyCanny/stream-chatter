@@ -28,6 +28,7 @@ const messageTimeout = 5000; // Time window in milliseconds to consider messages
 const profileImageCache = new Map(); // Cache for profile image URLs
 
 let currentLayout = 'boxes'; // Default layout
+let allMessages = []; // Store all messages
 
 function addChatMessage(username, message, badges, profileImageUrl, profileColor) {
     if (!username || !message) {
@@ -48,6 +49,9 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
 
     // Update the recent messages map
     recentMessages.set(username, { lastMessage: message, timestamp: now });
+
+    // Store the message in allMessages
+    allMessages.push({ username, message, badges, profileImageUrl, profileColor, timestamp: now });
 
     if (currentLayout === 'boxes') {
         addChatMessageBoxes(username, message, badges, profileImageUrl, profileColor);
@@ -80,7 +84,7 @@ function addChatMessageStandard(username, message, badges, profileImageUrl, prof
     const messagesDiv = chatBox.querySelector('.messages');
     const messageElement = createMessageElement(message);
     messagesDiv.appendChild(messageElement);
-    chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+    chatContainer.appendChild(chatBox);
 }
 
 function createChatBox(username, badges, profileImageUrl, profileColor) {
@@ -305,24 +309,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
 
     increaseBoxSizeButton.addEventListener('click', () => {
-        currentBoxSize += 20; // Increase the current box size
-        const chatBoxes = document.querySelectorAll('.chat-box');
-        chatBoxes.forEach(chatBox => {
-            chatBox.style.height = `${currentBoxSize}px`; // Set the height to the updated box size
-        });
+        currentBoxSize += 20;
+        updateBoxSizes();
     });
 
     decreaseBoxSizeButton.addEventListener('click', () => {
-        currentBoxSize -= 20; // Decrease the current box size
-        const chatBoxes = document.querySelectorAll('.chat-box');
-        chatBoxes.forEach(chatBox => {
-            chatBox.style.height = `${currentBoxSize}px`; // Set the height to the updated box size
-        });
+        currentBoxSize -= 20;
+        updateBoxSizes();
     });
 });
 
-function updateBoxSize() {
-    chatContainer.style.gridTemplateColumns = `repeat(auto-fill, minmax(${currentBoxSize}px, 1fr))`;
+function updateBoxSizes() {
+    const chatBoxes = document.querySelectorAll('.chat-box');
+    chatBoxes.forEach(chatBox => {
+        if (currentLayout === 'boxes') {
+            chatBox.style.height = `${currentBoxSize}px`;
+        } else {
+            chatBox.style.height = 'auto';
+        }
+    });
+}
+
+function updateChatLayout() {
+    chatContainer.className = currentLayout === 'boxes' ? 'boxes-layout' : 'standard-layout';
+    chatContainer.innerHTML = ''; // Clear existing messages
+
+    if (currentLayout === 'boxes') {
+        const userBoxes = {};
+        allMessages.forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+            if (!userBoxes[username]) {
+                userBoxes[username] = createChatBox(username, badges, profileImageUrl, profileColor);
+                chatContainer.insertBefore(userBoxes[username], chatContainer.firstChild);
+            }
+            const messagesDiv = userBoxes[username].querySelector('.messages');
+            const messageElement = createMessageElement(message);
+            messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
+        });
+    } else {
+        allMessages.forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+            const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+            const messagesDiv = chatBox.querySelector('.messages');
+            const messageElement = createMessageElement(message);
+            messagesDiv.appendChild(messageElement);
+            chatContainer.appendChild(chatBox);
+        });
+    }
+
+    // Update box sizes
+    updateBoxSizes();
 }
 
 // Event listener for the toggle timestamps checkbox
@@ -375,10 +409,3 @@ document.querySelectorAll('input[name="chat-layout"]').forEach(radio => {
     updateChatLayout();
   });
 });
-
-function updateChatLayout() {
-  chatContainer.className = currentLayout === 'boxes' ? 'boxes-layout' : 'standard-layout';
-  chatContainer.innerHTML = ''; // Clear existing messages
-  // Re-render messages in the new layout (you'll need to store messages in memory)
-  // This part depends on how you want to handle existing messages when switching layouts
-}
