@@ -144,56 +144,35 @@ body {
 }
 
 #chat-container {
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
+  height: calc(100vh - 120px); /* Adjust based on your top banner and bottom bar height */
   overflow-y: auto;
-  flex-grow: 1;
-  height: auto;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 #chat-container.boxes-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(5, 1fr); /* 5 columns */
   gap: 10px;
-  padding: 10px;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-@media (min-width: 1200px) {
-  #chat-container.boxes-layout {
-    grid-template-columns: repeat(5, 1fr); /* 5 columns for larger screens */
-  }
-}
-
-#chat-container.standard-layout {
-  display: flex;
-  flex-direction: column-reverse;
+  align-content: start;
 }
 
 .chat-box {
   border: 1px solid #ccc;
-  padding: 10px;
   background-color: #f9f9f9;
   border-radius: 4px;
-  margin-bottom: 10px;
   overflow: hidden;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .boxes-layout .chat-box {
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 0; /* Remove bottom margin as grid gap will handle spacing */
+  height: 200px; /* Fixed height for box layout */
 }
 
 .standard-layout .chat-box {
-  height: auto;
-  max-width: 100%;
+  margin-bottom: 10px;
 }
 
 .chat-box .username {
@@ -213,9 +192,9 @@ body {
 }
 
 .chat-box .messages {
-    margin-top: 5px;
-    overflow-y: auto; /* Make the messages area scrollable */
     flex-grow: 1;
+    overflow-y: auto; /* Make the messages area scrollable */
+    padding: 5px;
 }
 
 .chat-box .messages div:nth-child(even) {
