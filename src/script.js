@@ -1,7 +1,6 @@
 import './styles.css';
 import tmi from 'tmi.js';
 
-
 // OAuth and tmi.js setup
 const clientId = process.env.CLIENT_ID;
 const redirectUri = process.env.REDIRECT_URI;
@@ -19,13 +18,14 @@ const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
 const loadingOverlay = document.getElementById('loading-overlay');
 const toggleTimestampsCheckbox = document.getElementById('toggle-timestamps');
 
-
 let currentFontSize = 10; // Default font size
 let currentBoxSize = 140; // Default box size
 let client; // Declare client variable outside the function
 let isListenerAttached = false; // Flag to track event listener attachment
 const recentMessages = new Map(); // Map to store recent messages with timestamps
 const messageTimeout = 5000; // Time window in milliseconds to consider messages as duplicates
+
+const profileImageCache = new Map(); // Cache for profile image URLs
 
 function addChatMessage(username, message, badges, profileImageUrl, profileColor) {
     if (!username || !message) {
@@ -37,7 +37,7 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
 
     // Check if a similar message has been received from the same user within the time window
     if (recentMessages.has(username)) {
-        const { lastMessage, timestamp } = recentMessages.get(username);
+       const { lastMessage, timestamp } = recentMessages.get(username); 
         if (lastMessage === message && (now - timestamp) < messageTimeout) {
             console.log('Duplicate message detected, skipping:', message);
             return; // Skip adding the message
@@ -91,8 +91,8 @@ function getBadgesHTML(badges) {
 }
 
 async function fetchProfileImageUrl(username, token, callback) {
-    console.log('Fetching profile image URL for:', username); // Debug log
-    console.log('Using token:', token); // Debug log
+     console.log('Fetching profile image URL for:', username); 
+     //console.log('Using token:', token); 
 
     return fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
         headers: {
@@ -180,9 +180,17 @@ async function connectToTwitchChat(token, username, channelName) {
                 return;
             }
 
-            fetchProfileImageUrl(displayName, token, (profileImageUrl) => {
+            if (profileImageCache.has(displayName)) {
+                const profileImageUrl = profileImageCache.get(displayName);
                 addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
-            });
+            } else {
+                fetchProfileImageUrl(displayName, token, (profileImageUrl) => {
+                    if (profileImageUrl) {
+                        profileImageCache.set(displayName, profileImageUrl);
+                    }
+                    addChatMessage(displayName, message, badges, profileImageUrl, profileColor);
+                });
+            }
         });
         isListenerAttached = true; // Set the flag to true after attaching the listener
     }
