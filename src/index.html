@@ -77,6 +77,9 @@
                     <label>
                         <input type="checkbox" id="toggle-timestamps"> Show Timestamps
                     </label>
+                    <label>
+                        <input type="checkbox" id="toggle-badges" checked> Show Badges
+                    </label>
                     <button id="toggle-settings" class="btn">⚙️</button>
                 </div>
             </div>
@@ -84,12 +87,14 @@
                 <h2>Settings</h2>
                 <div class="setting-group">
                     <h3>Chat Layout</h3>
-                    <label>
-                        <input type="radio" name="chat-layout" value="boxes" checked> Chat Boxes
-                    </label>
-                    <label>
-                        <input type="radio" name="chat-layout" value="standard"> Standard Chat
-                    </label>
+                    <div class="layout-option">
+                        <input type="radio" id="boxes-layout" name="chat-layout" value="boxes" checked>
+                        <label for="boxes-layout">Chat Boxes</label>
+                    </div>
+                    <div class="layout-option">
+                        <input type="radio" id="standard-layout" name="chat-layout" value="standard">
+                        <label for="standard-layout">Standard Chat</label>
+                    </div>
                 </div>
                 <!-- Add your other settings controls here -->
                 <button id="close-settings" class="btn">Close</button>

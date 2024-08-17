@@ -17,6 +17,7 @@ const increaseBoxSizeButton = document.getElementById('increase-box-size');
 const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
 const loadingOverlay = document.getElementById('loading-overlay');
 const toggleTimestampsCheckbox = document.getElementById('toggle-timestamps');
+const toggleBadgesCheckbox = document.getElementById('toggle-badges');
 
 let currentFontSize = 10; // Default font size
 let currentBoxHeight = 200; // Default box height
@@ -65,12 +66,19 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
         const messagesDiv = chatBox.querySelector('.messages');
         const messageElement = createMessageElement(message);
         messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
+        
+        // Apply current size to the chat box
+        chatBox.style.height = `${currentBoxHeight}px`;
+        chatBox.style.width = `${currentBoxWidth}px`;
     } else {
         const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
         const messagesDiv = chatBox.querySelector('.messages');
         const messageElement = createMessageElement(message);
         messagesDiv.appendChild(messageElement);
         chatContainer.insertBefore(chatBox, chatContainer.firstChild); // Insert at the top for standard layout
+        
+        // Scroll to the bottom of the chat container
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
     // Show the chat container if it's hidden
@@ -81,10 +89,12 @@ function createChatBox(username, badges, profileImageUrl, profileColor) {
     const chatBox = document.createElement('div');
     chatBox.id = username;
     chatBox.className = 'chat-box';
+    chatBox.style.height = `${currentBoxHeight}px`;
+    chatBox.style.width = `${currentBoxWidth}px`;
     chatBox.innerHTML = `
         <div class="username" data-username="${username}" data-display-name="${username}">
             <img src="${profileImageUrl}" class="profile-image" alt="${username}">
-            ${getBadgesHTML(badges)}
+            <span class="badges">${getBadgesHTML(badges)}</span>
             <span class="username-text" style="color: ${profileColor};">${username}</span>
         </div>
         <div class="messages"></div>`;
@@ -262,6 +272,10 @@ window.addEventListener('load', async() => {
     currentLayout = localStorage.getItem('chatLayout') || 'boxes';
     document.querySelector(`input[name="chat-layout"][value="${currentLayout}"]`).checked = true;
     updateChatLayout();
+    toggleBoxSizeControls(currentLayout === 'boxes'); // Set initial visibility of box size controls
+
+    // Set initial badge visibility
+    toggleBadges(toggleBadgesCheckbox.checked);
 });
 
 loginForm.addEventListener('submit', function(event) {
@@ -356,6 +370,7 @@ function updateChatLayout() {
       messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
     });
     updateBoxSizes();
+    toggleBoxSizeControls(true); // Show box size controls
   } else {
     chatContainer.className = 'standard-layout';
     
@@ -366,9 +381,11 @@ function updateChatLayout() {
       messagesDiv.appendChild(messageElement);
       chatContainer.appendChild(chatBox);
     });
+    toggleBoxSizeControls(false); // Hide box size controls
   }
 
   updateBoxSizes();
+  updateGridLayout();
 }
 
 // Event listener for the toggle timestamps checkbox
@@ -420,5 +437,23 @@ document.querySelectorAll('input[name="chat-layout"]').forEach(radio => {
     localStorage.setItem('chatLayout', currentLayout);
     updateChatLayout();
     chatContainer.style.flexDirection = currentLayout === 'boxes' ? 'row' : 'column';
+    toggleBoxSizeControls(currentLayout === 'boxes'); // Show/hide box size controls based on layout
   });
+});
+
+function toggleBoxSizeControls(show) {
+    const boxSizeControls = document.querySelectorAll('#increase-box-height, #decrease-box-height, #increase-box-width, #decrease-box-width');
+    boxSizeControls.forEach(button => {
+        button.style.display = show ? 'inline-block' : 'none';
+    });
+}
+
+// Add this function to toggle badge visibility
+function toggleBadges(show) {
+    chatContainer.classList.toggle('hide-badges', !show);
+}
+
+// Add this event listener with the other event listeners
+toggleBadgesCheckbox.addEventListener('change', (event) => {
+    toggleBadges(event.target.checked);
 });
