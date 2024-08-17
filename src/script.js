@@ -69,14 +69,14 @@ function addChatMessageBoxes(username, message, badges, profileImageUrl, profile
     if (!chatBox) {
         chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
         chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+    } else {
+        chatContainer.removeChild(chatBox);
+        chatContainer.insertBefore(chatBox, chatContainer.firstChild);
     }
 
     const messagesDiv = chatBox.querySelector('.messages');
     const messageElement = createMessageElement(message);
     messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
-
-    // Move the chat box to the start of the container
-    chatContainer.insertBefore(chatBox, chatContainer.firstChild);
 }
 
 function addChatMessageStandard(username, message, badges, profileImageUrl, profileColor) {
