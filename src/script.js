@@ -32,6 +32,8 @@ const profileImageCache = new Map(); // Cache for profile image URLs
 let currentLayout = 'boxes'; // Default layout
 let allMessages = []; // Store all messages
 
+const pinnedUsers = new Set();
+
 function addChatMessage(username, message, badges, profileImageUrl, profileColor) {
     if (!username || !message) {
         console.log('Skipping empty message or username:', { username, message });
@@ -96,6 +98,7 @@ function createChatBox(username, badges, profileImageUrl, profileColor) {
             <img src="${profileImageUrl}" class="profile-image" alt="${username}">
             <span class="badges">${getBadgesHTML(badges)}</span>
             <span class="username-text" style="color: ${profileColor};">${username}</span>
+            <button class="pin-button" onclick="togglePin('${username}')">📌</button>
         </div>
         <div class="messages"></div>`;
     return chatBox;
@@ -356,40 +359,52 @@ function updateGridLayout() {
 }
 
 function updateChatLayout() {
-  chatContainer.innerHTML = ''; // Clear existing messages
-  
-  if (currentLayout === 'boxes') {
-    chatContainer.className = 'boxes-layout';
-    const userBoxes = {};
+    chatContainer.innerHTML = ''; // Clear existing messages
     
-    // Reverse the allMessages array to process most recent messages first
-    allMessages.slice().reverse().forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
-      if (!userBoxes[username]) {
-        const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
-        userBoxes[username] = chatBox;
-        chatContainer.appendChild(chatBox);
-      }
-      const messagesDiv = userBoxes[username].querySelector('.messages');
-      const messageElement = createMessageElement(message);
-      messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
-    });
-    updateBoxSizes();
-    toggleBoxSizeControls(true); // Show box size controls
-  } else {
-    chatContainer.className = 'standard-layout';
-    
-    allMessages.slice().reverse().forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
-      const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
-      const messagesDiv = chatBox.querySelector('.messages');
-      const messageElement = createMessageElement(message);
-      messagesDiv.appendChild(messageElement);
-      chatContainer.appendChild(chatBox);
-    });
-    toggleBoxSizeControls(false); // Hide box size controls
-  }
+    if (currentLayout === 'boxes') {
+        chatContainer.className = 'boxes-layout';
+        const userBoxes = {};
+        
+        // Add pinned boxes first
+        pinnedUsers.forEach(username => {
+            const messageData = allMessages.find(msg => msg.username === username);
+            if (messageData) {
+                const { badges, profileImageUrl, profileColor } = messageData;
+                const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+                chatBox.classList.add('pinned');
+                userBoxes[username] = chatBox;
+                chatContainer.appendChild(chatBox);
+            }
+        });
+        
+        // Add remaining boxes
+        allMessages.slice().reverse().forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+            if (!userBoxes[username]) {
+                const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+                userBoxes[username] = chatBox;
+                chatContainer.appendChild(chatBox);
+            }
+            const messagesDiv = userBoxes[username].querySelector('.messages');
+            const messageElement = createMessageElement(message);
+            messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
+        });
+        updateBoxSizes();
+        toggleBoxSizeControls(true); // Show box size controls
+    } else {
+        chatContainer.className = 'standard-layout';
+        
+        allMessages.slice().reverse().forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+            const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+            const messagesDiv = chatBox.querySelector('.messages');
+            const messageElement = createMessageElement(message);
+            messagesDiv.appendChild(messageElement);
+            chatContainer.appendChild(chatBox);
+        });
+        toggleBoxSizeControls(false); // Hide box size controls
+    }
 
-  updateBoxSizes();
-  updateGridLayout();
+    updateBoxSizes();
+    updateGridLayout();
 }
 
 // Event listener for the toggle timestamps checkbox

@@ -337,6 +337,7 @@ body {
     position: absolute;
     right: 5px;
     top: 5px;
+    z-index: 2; /* Ensure the button is above other elements */
 }
 
 .chat-box.pinned .pin-button {
@@ -345,4 +346,16 @@ body {
 
 .chat-box .username {
     position: relative;
+}
+
+/* Add this to ensure pinned boxes appear at the top */
+#chat-container.boxes-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    align-content: start;
+}
+
+.chat-box.pinned {
+    order: -1; /* This will place pinned boxes at the start of the grid */
 }
