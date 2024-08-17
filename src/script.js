@@ -226,7 +226,7 @@ window.addEventListener('load', async() => {
         const channelLogoUrl = localStorage.getItem('channelLogoUrl'); // Assuming you store the channel logo URL
         if (username && channelName) {
             loginContainer.style.display = 'none';
-            chatContainer.style.display = 'block';
+            chatContainer.classList.remove('hidden');
             await connectToTwitchChat(token, username, channelName);
             // Set the channel logo source
             channelIcon.src = channelLogoUrl;
@@ -252,7 +252,7 @@ loginForm.addEventListener('submit', function(event) {
     localStorage.setItem('username', username);
     localStorage.setItem('channelName', channelName);
     loginContainer.style.display = 'none';
-    chatContainer.style.display = 'block';
+    chatContainer.classList.remove('hidden');
     authenticate(username, channelName);
 });
 
@@ -298,24 +298,27 @@ function updateBoxSizes() {
 }
 
 function updateChatLayout() {
-    chatContainer.innerHTML = ''; // Clear existing messages
+  chatContainer.innerHTML = ''; // Clear existing messages
   
-    const sortedMessages = currentLayout === 'boxes' 
-      ? Object.values(allMessages.reduce((acc, msg) => {
-          acc[msg.username] = msg;
-          return acc;
-        }, {}))
-      : allMessages.slice().reverse();
+  const sortedMessages = currentLayout === 'boxes' 
+    ? Object.values(allMessages.reduce((acc, msg) => {
+        acc[msg.username] = msg;
+        return acc;
+      }, {}))
+    : allMessages.slice().reverse();
 
-    sortedMessages.forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
-      const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
-      const messagesDiv = chatBox.querySelector('.messages');
-      const messageElement = createMessageElement(message);
-      messagesDiv.appendChild(messageElement);
-      chatContainer.appendChild(chatBox);
-    });
+  sortedMessages.forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+    const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+    const messagesDiv = chatBox.querySelector('.messages');
+    const messageElement = createMessageElement(message);
+    messagesDiv.appendChild(messageElement);
+    chatContainer.appendChild(chatBox);
+  });
 
-    updateBoxSizes();
+  updateBoxSizes();
+
+  // Ensure the correct layout is applied
+  chatContainer.style.flexDirection = currentLayout === 'boxes' ? 'row' : 'column';
 }
 
 // Event listener for the toggle timestamps checkbox
@@ -366,6 +369,7 @@ document.querySelectorAll('input[name="chat-layout"]').forEach(radio => {
     currentLayout = event.target.value;
     localStorage.setItem('chatLayout', currentLayout);
     updateChatLayout();
+    chatContainer.style.flexDirection = currentLayout === 'boxes' ? 'row' : 'column';
   });
 });
 

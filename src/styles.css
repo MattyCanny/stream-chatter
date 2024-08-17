@@ -155,6 +155,10 @@ body {
   justify-content: flex-start;
 }
 
+#chat-container.hidden {
+  display: none;
+}
+
 .chat-box {
   width: calc(20% - 10px); /* 5 columns */
   margin: 5px;
