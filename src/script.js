@@ -91,7 +91,7 @@ function getBadgesHTML(badges) {
 }
 
 async function fetchProfileImageUrl(username, token, callback) {
-     console.log('Fetching profile image URL for:', username); 
+     //console.log('Fetching profile image URL for:', username); 
      //console.log('Using token:', token); 
 
     return fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
