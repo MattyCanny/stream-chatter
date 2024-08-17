@@ -19,7 +19,7 @@ const loadingOverlay = document.getElementById('loading-overlay');
 const toggleTimestampsCheckbox = document.getElementById('toggle-timestamps');
 
 let currentFontSize = 10; // Default font size
-let currentBoxSize = 140; // Default box size
+let currentBoxSize = 200; // Adjusted default box size
 let client; // Declare client variable outside the function
 let isListenerAttached = false; // Flag to track event listener attachment
 const recentMessages = new Map(); // Map to store recent messages with timestamps

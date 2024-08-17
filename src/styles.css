@@ -156,8 +156,17 @@ body {
 
 #chat-container.boxes-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
+  padding: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1200px) {
+  #chat-container.boxes-layout {
+    grid-template-columns: repeat(5, 1fr); /* 5 columns for larger screens */
+  }
 }
 
 #chat-container.standard-layout {
@@ -179,6 +188,7 @@ body {
   height: 200px;
   display: flex;
   flex-direction: column;
+  margin-bottom: 0; /* Remove bottom margin as grid gap will handle spacing */
 }
 
 .standard-layout .chat-box {
