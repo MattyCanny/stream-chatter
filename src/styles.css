@@ -144,27 +144,46 @@ body {
 }
 
 #chat-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust the minmax value as needed */
-    gap: 10px; /* Add a gap between chat boxes */
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-    flex-grow: 1; /* Allow the chat container to grow and fill available space */
-    height: auto; /* Remove fixed height */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  flex-grow: 1;
+  height: auto;
+}
+
+#chat-container.boxes-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+#chat-container.standard-layout {
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .chat-box {
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    height: 200px; /* Fixed height */
-    overflow: hidden; /* Hide overflow to make only messages scrollable */
-    box-sizing: border-box; /* Ensure padding and border are included in the width */
-    display: flex;
-    flex-direction: column;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.boxes-layout .chat-box {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.standard-layout .chat-box {
+  height: auto;
+  max-width: 100%;
 }
 
 .chat-box .username {

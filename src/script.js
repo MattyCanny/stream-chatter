@@ -27,6 +27,8 @@ const messageTimeout = 5000; // Time window in milliseconds to consider messages
 
 const profileImageCache = new Map(); // Cache for profile image URLs
 
+let currentLayout = 'boxes'; // Default layout
+
 function addChatMessage(username, message, badges, profileImageUrl, profileColor) {
     if (!username || !message) {
         console.log('Skipping empty message or username:', { username, message });
@@ -47,38 +49,60 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
     // Update the recent messages map
     recentMessages.set(username, { lastMessage: message, timestamp: now });
 
-    let chatBox = document.getElementById(username);
-
-    if (!chatBox) {
-        chatBox = document.createElement('div');
-        chatBox.id = username;
-        chatBox.className = 'chat-box';
-        chatBox.style.height = `${currentBoxSize}px`; // Set the height to the current box size
-        chatBox.innerHTML = `
-            <div class="username" data-username="${username}" data-display-name="${username}">
-                <img src="${profileImageUrl}" class="profile-image" alt="${username}">
-                ${getBadgesHTML(badges)}
-                <span class="username-text" style="color: ${profileColor};">${username}</span>
-            </div>
-            <div class="messages"></div>`;
-        chatContainer.appendChild(chatBox); // Append to the end to maintain order
+    if (currentLayout === 'boxes') {
+        addChatMessageBoxes(username, message, badges, profileImageUrl, profileColor);
+    } else {
+        addChatMessageStandard(username, message, badges, profileImageUrl, profileColor);
     }
-
-    // Move the chat box to the top
-    chatContainer.removeChild(chatBox);
-    chatContainer.insertBefore(chatBox, chatContainer.firstChild);
-
-    const messagesDiv = chatBox.querySelector('.messages');
-    const messageElement = document.createElement('div');
-    const timestamp = new Date().toLocaleTimeString(); // Get the current time as a string
-    messageElement.innerHTML = `<span class="timestamp">${timestamp}</span> ${message}`;
-    messageElement.style.fontSize = `${currentFontSize}px`; // Set the font size
-
-    // Prepend the new message element to the top
-    messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
 
     // Show the chat container if it's hidden
     chatContainer.classList.remove('hidden');
+}
+
+function addChatMessageBoxes(username, message, badges, profileImageUrl, profileColor) {
+    let chatBox = document.getElementById(username);
+
+    if (!chatBox) {
+        chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+        chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+    } else {
+        chatContainer.removeChild(chatBox);
+        chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+    }
+
+    const messagesDiv = chatBox.querySelector('.messages');
+    const messageElement = createMessageElement(message);
+    messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
+}
+
+function addChatMessageStandard(username, message, badges, profileImageUrl, profileColor) {
+    const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+    const messagesDiv = chatBox.querySelector('.messages');
+    const messageElement = createMessageElement(message);
+    messagesDiv.appendChild(messageElement);
+    chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+}
+
+function createChatBox(username, badges, profileImageUrl, profileColor) {
+    const chatBox = document.createElement('div');
+    chatBox.id = currentLayout === 'boxes' ? username : `chat-${Date.now()}`;
+    chatBox.className = 'chat-box';
+    chatBox.innerHTML = `
+        <div class="username" data-username="${username}" data-display-name="${username}">
+            <img src="${profileImageUrl}" class="profile-image" alt="${username}">
+            ${getBadgesHTML(badges)}
+            <span class="username-text" style="color: ${profileColor};">${username}</span>
+        </div>
+        <div class="messages"></div>`;
+    return chatBox;
+}
+
+function createMessageElement(message) {
+    const messageElement = document.createElement('div');
+    const timestamp = new Date().toLocaleTimeString();
+    messageElement.innerHTML = `<span class="timestamp">${timestamp}</span> ${message}`;
+    messageElement.style.fontSize = `${currentFontSize}px`;
+    return messageElement;
 }
 
 function getBadgesHTML(badges) {
@@ -239,6 +263,11 @@ window.addEventListener('load', async() => {
 
     // Hide the chat container initially
     chatContainer.classList.add('hidden');
+
+    // Set the initial layout
+    currentLayout = localStorage.getItem('chatLayout') || 'boxes';
+    document.querySelector(`input[name="chat-layout"][value="${currentLayout}"]`).checked = true;
+    updateChatLayout();
 });
 
 loginForm.addEventListener('submit', function(event) {
@@ -337,3 +366,19 @@ document.addEventListener('click', (event) => {
     settingsPane.classList.remove('open');
   }
 });
+
+// Add event listener for layout change
+document.querySelectorAll('input[name="chat-layout"]').forEach(radio => {
+  radio.addEventListener('change', (event) => {
+    currentLayout = event.target.value;
+    localStorage.setItem('chatLayout', currentLayout);
+    updateChatLayout();
+  });
+});
+
+function updateChatLayout() {
+  chatContainer.className = currentLayout === 'boxes' ? 'boxes-layout' : 'standard-layout';
+  chatContainer.innerHTML = ''; // Clear existing messages
+  // Re-render messages in the new layout (you'll need to store messages in memory)
+  // This part depends on how you want to handle existing messages when switching layouts
+}
