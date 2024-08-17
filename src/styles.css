@@ -190,7 +190,7 @@ body {
     background-color: #e0e0e0; /* Background color for the username bar */
     padding: 5px;
     border-bottom: 1px solid #ccc;
-    position: sticky;
+    position: relative; /* Position the username bar relatively */
     top: 0;
     /*z-index: 1;*/
 }
@@ -257,7 +257,6 @@ body {
 }
 
 .timestamp {
-    font-size: 12px;
     color: #888;
     margin-right: 10px; /* Adjusted to add space after the timestamp */
     display: none; /* Initially hidden */
@@ -328,4 +327,22 @@ body {
 
 .settings-pane .layout-option label {
     cursor: pointer;
+}
+
+.pin-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.chat-box.pinned .pin-button {
+    color: #6441a5;
+}
+
+.chat-box .username {
+    position: relative;
 }

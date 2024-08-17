@@ -104,7 +104,7 @@ function createChatBox(username, badges, profileImageUrl, profileColor) {
 function createMessageElement(message) {
     const messageElement = document.createElement('div');
     const timestamp = new Date().toLocaleTimeString();
-    messageElement.innerHTML = `<span class="timestamp">${timestamp}</span> ${message}`;
+    messageElement.innerHTML = `<span class="timestamp" style="font-size: ${Math.max(currentFontSize - 2, 8)}px">${timestamp}</span> ${message}`;
     messageElement.style.fontSize = `${currentFontSize}px`;
     return messageElement;
 }
@@ -304,6 +304,10 @@ function updateFontSize() {
     const messageElements = document.querySelectorAll('.messages div');
     messageElements.forEach(element => {
         element.style.fontSize = `${currentFontSize}px`;
+        const timestamp = element.querySelector('.timestamp');
+        if (timestamp) {
+            timestamp.style.fontSize = `${Math.max(currentFontSize - 2, 8)}px`; // Slightly smaller, but not less than 8px
+        }
     });
 }
 
@@ -457,3 +461,15 @@ function toggleBadges(show) {
 toggleBadgesCheckbox.addEventListener('change', (event) => {
     toggleBadges(event.target.checked);
 });
+
+function togglePin(username) {
+    const chatBox = document.getElementById(username);
+    if (pinnedUsers.has(username)) {
+        pinnedUsers.delete(username);
+        chatBox.classList.remove('pinned');
+    } else {
+        pinnedUsers.add(username);
+        chatBox.classList.add('pinned');
+    }
+    updateChatLayout();
+}
