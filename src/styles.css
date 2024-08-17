@@ -153,7 +153,7 @@ body {
 
 #chat-container.boxes-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* This will be updated dynamically */
   gap: 10px;
   align-content: start;
 }
@@ -161,6 +161,8 @@ body {
 #chat-container.standard-layout {
   display: flex;
   flex-direction: column;
+  height: auto;
+  min-height: calc(100vh - 120px);
 }
 
 .chat-box {
@@ -173,12 +175,14 @@ body {
 }
 
 .boxes-layout .chat-box {
-  height: 200px;
+  height: 200px; /* This will be updated dynamically */
+  width: 200px; /* This will be updated dynamically */
 }
 
 .standard-layout .chat-box {
   width: 100%;
   margin-bottom: 10px;
+  flex-shrink: 0; /* Prevent boxes from shrinking */
 }
 
 .chat-box .username {

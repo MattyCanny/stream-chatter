@@ -19,7 +19,8 @@ const loadingOverlay = document.getElementById('loading-overlay');
 const toggleTimestampsCheckbox = document.getElementById('toggle-timestamps');
 
 let currentFontSize = 10; // Default font size
-let currentBoxSize = 200; // Adjusted default box size
+let currentBoxHeight = 200; // Default box height
+let currentBoxWidth = 200; // Default box width
 let client; // Declare client variable outside the function
 let isListenerAttached = false; // Flag to track event listener attachment
 const recentMessages = new Map(); // Map to store recent messages with timestamps
@@ -69,7 +70,7 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
         const messagesDiv = chatBox.querySelector('.messages');
         const messageElement = createMessageElement(message);
         messagesDiv.appendChild(messageElement);
-        chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+        chatContainer.insertBefore(chatBox, chatContainer.firstChild); // Insert at the top for standard layout
     }
 
     // Show the chat container if it's hidden
@@ -294,25 +295,46 @@ function updateFontSize() {
 
 // Box size adjustment controls
 document.addEventListener('DOMContentLoaded', () => {
-    const increaseBoxSizeButton = document.getElementById('increase-box-size');
-    const decreaseBoxSizeButton = document.getElementById('decrease-box-size');
+    const increaseBoxHeightButton = document.getElementById('increase-box-height');
+    const decreaseBoxHeightButton = document.getElementById('decrease-box-height');
+    const increaseBoxWidthButton = document.getElementById('increase-box-width');
+    const decreaseBoxWidthButton = document.getElementById('decrease-box-width');
 
-    increaseBoxSizeButton.addEventListener('click', () => {
-        currentBoxSize += 20;
+    increaseBoxHeightButton.addEventListener('click', () => {
+        currentBoxHeight += 20;
         updateBoxSizes();
     });
 
-    decreaseBoxSizeButton.addEventListener('click', () => {
-        currentBoxSize -= 20;
+    decreaseBoxHeightButton.addEventListener('click', () => {
+        currentBoxHeight = Math.max(100, currentBoxHeight - 20); // Minimum height of 100px
+        updateBoxSizes();
+    });
+
+    increaseBoxWidthButton.addEventListener('click', () => {
+        currentBoxWidth += 20;
+        updateBoxSizes();
+    });
+
+    decreaseBoxWidthButton.addEventListener('click', () => {
+        currentBoxWidth = Math.max(150, currentBoxWidth - 20); // Minimum width of 150px
         updateBoxSizes();
     });
 });
 
 function updateBoxSizes() {
-    const chatBoxes = document.querySelectorAll('.chat-box');
-    chatBoxes.forEach(chatBox => {
-        chatBox.style.height = `${currentBoxSize}px`;
-    });
+    if (currentLayout === 'boxes') {
+        const chatBoxes = document.querySelectorAll('.chat-box');
+        chatBoxes.forEach(chatBox => {
+            chatBox.style.height = `${currentBoxHeight}px`;
+            chatBox.style.width = `${currentBoxWidth}px`;
+        });
+        updateGridLayout();
+    }
+}
+
+function updateGridLayout() {
+    const chatContainer = document.getElementById('chat-container');
+    chatContainer.style.gridTemplateColumns = `repeat(auto-fill, minmax(${currentBoxWidth}px, 1fr))`;
 }
 
 function updateChatLayout() {
@@ -333,6 +355,7 @@ function updateChatLayout() {
       const messageElement = createMessageElement(message);
       messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
     });
+    updateBoxSizes();
   } else {
     chatContainer.className = 'standard-layout';
     
@@ -398,12 +421,4 @@ document.querySelectorAll('input[name="chat-layout"]').forEach(radio => {
     updateChatLayout();
     chatContainer.style.flexDirection = currentLayout === 'boxes' ? 'row' : 'column';
   });
-});
-
-// Add this to your code temporarily for testing
-window.addEventListener('load', () => {
-    for (let i = 0; i < 20; i++) {
-        addChatMessage(`user${i}`, `Test message ${i}`, null, 'https://placekitten.com/50/50', '#000000');
-    }
-    updateChatLayout();
 });
