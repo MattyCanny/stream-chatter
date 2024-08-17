@@ -52,7 +52,25 @@ function addChatMessage(username, message, badges, profileImageUrl, profileColor
 
     // Store the message in allMessages
     allMessages.push({ username, message, badges, profileImageUrl, profileColor, timestamp: now });
-    updateChatLayout();
+    
+    if (currentLayout === 'boxes') {
+        let chatBox = document.getElementById(username);
+        if (!chatBox) {
+            chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+            chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+        } else {
+            chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+        }
+        const messagesDiv = chatBox.querySelector('.messages');
+        const messageElement = createMessageElement(message);
+        messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
+    } else {
+        const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+        const messagesDiv = chatBox.querySelector('.messages');
+        const messageElement = createMessageElement(message);
+        messagesDiv.appendChild(messageElement);
+        chatContainer.insertBefore(chatBox, chatContainer.firstChild);
+    }
 
     // Show the chat container if it's hidden
     chatContainer.classList.remove('hidden');
@@ -300,25 +318,34 @@ function updateBoxSizes() {
 function updateChatLayout() {
   chatContainer.innerHTML = ''; // Clear existing messages
   
-  const sortedMessages = currentLayout === 'boxes' 
-    ? Object.values(allMessages.reduce((acc, msg) => {
-        acc[msg.username] = msg;
-        return acc;
-      }, {}))
-    : allMessages.slice().reverse();
-
-  sortedMessages.forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
-    const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
-    const messagesDiv = chatBox.querySelector('.messages');
-    const messageElement = createMessageElement(message);
-    messagesDiv.appendChild(messageElement);
-    chatContainer.appendChild(chatBox);
-  });
+  if (currentLayout === 'boxes') {
+    chatContainer.className = 'boxes-layout';
+    const userBoxes = {};
+    
+    // Reverse the allMessages array to process most recent messages first
+    allMessages.slice().reverse().forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+      if (!userBoxes[username]) {
+        const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+        userBoxes[username] = chatBox;
+        chatContainer.appendChild(chatBox);
+      }
+      const messagesDiv = userBoxes[username].querySelector('.messages');
+      const messageElement = createMessageElement(message);
+      messagesDiv.insertBefore(messageElement, messagesDiv.firstChild);
+    });
+  } else {
+    chatContainer.className = 'standard-layout';
+    
+    allMessages.slice().reverse().forEach(({ username, message, badges, profileImageUrl, profileColor }) => {
+      const chatBox = createChatBox(username, badges, profileImageUrl, profileColor);
+      const messagesDiv = chatBox.querySelector('.messages');
+      const messageElement = createMessageElement(message);
+      messagesDiv.appendChild(messageElement);
+      chatContainer.appendChild(chatBox);
+    });
+  }
 
   updateBoxSizes();
-
-  // Ensure the correct layout is applied
-  chatContainer.style.flexDirection = currentLayout === 'boxes' ? 'row' : 'column';
 }
 
 // Event listener for the toggle timestamps checkbox
